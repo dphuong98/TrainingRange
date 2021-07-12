@@ -8,6 +8,9 @@ public struct RationalNumber : IComparable, IComparable<RationalNumber>, IEquata
     
     public RationalNumber(int numerator, int denominator)
     {
+        if (denominator == 0)
+            throw new ArgumentException("Denominator cant be 0!");
+        
         var gcd = Mathplus.GCD(numerator, denominator);
 
         Numerator = numerator / gcd;
@@ -26,7 +29,10 @@ public struct RationalNumber : IComparable, IComparable<RationalNumber>, IEquata
 
     public bool Equals(RationalNumber other)
     {
-        throw new NotImplementedException();
+        if (Numerator == 0 && other.Numerator == 0)
+            return true;
+
+        return Numerator == other.Numerator && Denominator == other.Denominator;
     }
     
     public override string ToString()
