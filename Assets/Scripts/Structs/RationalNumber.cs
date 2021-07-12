@@ -10,11 +10,16 @@ public struct RationalNumber : IComparable, IComparable<RationalNumber>, IEquata
     {
         if (denominator == 0)
             throw new ArgumentException("Denominator cant be 0!");
-        
-        var gcd = Mathplus.GCD(numerator, denominator);
 
-        Numerator = numerator / gcd;
-        Denominator = denominator / gcd;
+        if (numerator == 0) {
+            Numerator = numerator;
+            Denominator = denominator;
+        }
+        else {
+            var gcd = Mathplus.GCD(numerator, denominator);
+            Numerator = numerator / gcd;
+            Denominator = denominator / gcd;
+        }
     }
 
     public int CompareTo(object obj)
