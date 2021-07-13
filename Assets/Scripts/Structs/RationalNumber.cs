@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using UnityEngine;
 
 public struct RationalNumber : IComparable, IComparable<RationalNumber>, IEquatable<RationalNumber>
 {
@@ -11,16 +12,36 @@ public struct RationalNumber : IComparable, IComparable<RationalNumber>, IEquata
         if (denominator == 0)
             throw new ArgumentException("Denominator cant be 0!");
 
-        if (numerator == 0) {
-            Numerator = numerator;
-            Denominator = denominator;
-        }
-        else {
-            var gcd = Mathplus.GCD(numerator, denominator);
-            Numerator = numerator / gcd;
-            Denominator = denominator / gcd;
-        }
+        Numerator = numerator;
+        Denominator = denominator;
+        
+        Reduce();
     }
+    
+    //Conversion
+    //TODO
+    
+    //Operator overload
+    public static RationalNumber operator +(RationalNumber a) => a;
+    public static RationalNumber operator -(RationalNumber a) => new RationalNumber(-a.Numerator, a.Denominator);
+    
+    public static RationalNumber operator +(RationalNumber a, RationalNumber b) =>
+        new RationalNumber(a.Numerator * b.Denominator + a.Denominator * b.Numerator, a.Denominator * b.Denominator)
+            .Reduce();
+    public static RationalNumber operator -(RationalNumber a, RationalNumber b) => a + -b;
+    public static RationalNumber operator *(RationalNumber a, RationalNumber b) =>
+        new RationalNumber(a.Numerator * b.Numerator, a.Denominator * b.Denominator).Reduce();
+    public static RationalNumber operator /(RationalNumber a, RationalNumber b)
+    {
+        if (b.Numerator == 0)
+            throw new DivideByZeroException();
+        
+        return new RationalNumber(a.Numerator * b.Denominator, a.Denominator * b.Numerator);
+    }
+    
+    //TODO > >= < <=
+    public static bool operator ==(RationalNumber a, RationalNumber b) => a.Equals(b);
+    public static bool operator !=(RationalNumber a, RationalNumber b) => !(a == b);
 
     public int CompareTo(object obj)
     {
@@ -34,14 +55,27 @@ public struct RationalNumber : IComparable, IComparable<RationalNumber>, IEquata
 
     public bool Equals(RationalNumber other)
     {
-        if (Numerator == 0 && other.Numerator == 0)
-            return true;
-
         return Numerator == other.Numerator && Denominator == other.Denominator;
     }
     
     public override string ToString()
     {
-        return Numerator.ToString() + "/" + Denominator.ToString();
+        return Numerator + "/" + Denominator;
+    }
+
+    private RationalNumber Reduce()
+    {
+        if (Numerator == 0)
+        {
+            Denominator = 1;
+        }
+        else
+        {
+            var gcd = Mathplus.GCD(Math.Abs(Numerator), Math.Abs(Denominator));
+            Numerator /= gcd;
+            Denominator /= gcd;
+        }
+        
+        return this;
     }
 }

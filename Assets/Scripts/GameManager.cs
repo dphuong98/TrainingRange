@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Rn = RationalNumber;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,18 +16,48 @@ public class GameManager : MonoBehaviour
     {
         try
         {
-            RationalNumber errNum = new RationalNumber(1, 0);
+            var errNum = new Rn(1, 0);
         }
         catch (ArgumentException e)
         {
             Debug.Log(e.Message);
         }
         
-        RationalNumber num1 = new RationalNumber(120, 90);
-        RationalNumber num2 = new RationalNumber(20, 15);
-        RationalNumber num3 = new RationalNumber(0, 30);
+        var num1 = new Rn(120, 90);
+        var num2 = new Rn(20, 15);
+        var num3 = new Rn(0, 30);
+        var num4 = -num1;
 
-        Debug.Log("num1 == num2: " + num1.Equals(num2).ToString());
+        var equ1 = num1.Equals(num2);
+        var equ2 = num1.Equals(num3);
+        var equ3 = new Rn(0, 20).Equals(new Rn(0, 10));
+        var equ4 = num1.Equals(num4);
+
+        var add1 = num1 + num2;
+        var add2 = num1 + num3;
+        var add3 = num1 + num4;
+
+        var sub1 = num1 - num2;
+        var sub2 = num1 - num3;
+        var sub3 = num1 - num4;
+
+        var mul1 = num1 * num2;
+        var mul2 = num1 * num3;
+        var mul3 = num1 * num4;
+
+        var div1 = num1 / num2;
+        try
+        {
+            var div2 = num1 / num3;
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
+
+        var div3 = num1 / num4;
         
+        
+        Debug.Log("Done");
     }
 }
