@@ -33,13 +33,14 @@ public class GameManager : MonoBehaviour
         var com3 = num4.CompareTo(num1);
         try
         {
-            var com4 = num1.CompareTo(2);
+            var com4 = new Rn(2, 1).CompareTo(2f);
         }
         catch (Exception e)
         {
-            Debug.Log(e);
+            Debug.Log(e.Message);
         }
-        
+        var com5 = new Rn(2, 1).CompareTo((object) new Rn(1, 2));
+
         var equ1 = num1.Equals(num2);
         var equ2 = num1.Equals(num3);
         var equ3 = new Rn(0, 20).Equals(new Rn(0, 10));
@@ -66,11 +67,23 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log(e.Message);
         }
-
         var div3 = num1 / num4;
 
+        var gt = num1 > num2;
+        var gte = num1 >= num2;
+        var lt = num1 < num2;
+        var lte = num1 <= num2;
+
+        var ilequ1 = num1 == num2;
+        var ilequ2 = num1 == num3;
+        var ilequ3 = num1 != num3;
+
         float f1 = num1;
+        var rn1 = (Rn) f1;
+        var rn2 = (Rn) 0.333333f;
         
+        //TODO Handle overflow
+
         Debug.Log("Done");
     }
 }
