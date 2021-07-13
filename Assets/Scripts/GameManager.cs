@@ -28,6 +28,18 @@ public class GameManager : MonoBehaviour
         var num3 = new Rn(0, 30);
         var num4 = -num1;
 
+        var com1 = num1.CompareTo(num2);
+        var com2 = num1.CompareTo(num3);
+        var com3 = num4.CompareTo(num1);
+        try
+        {
+            var com4 = num1.CompareTo(2);
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e);
+        }
+        
         var equ1 = num1.Equals(num2);
         var equ2 = num1.Equals(num3);
         var equ3 = new Rn(0, 20).Equals(new Rn(0, 10));
@@ -56,7 +68,8 @@ public class GameManager : MonoBehaviour
         }
 
         var div3 = num1 / num4;
-        
+
+        float f1 = num1;
         
         Debug.Log("Done");
     }

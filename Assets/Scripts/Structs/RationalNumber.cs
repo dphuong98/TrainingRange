@@ -19,8 +19,8 @@ public struct RationalNumber : IComparable, IComparable<RationalNumber>, IEquata
     }
     
     //Conversion
-    //TODO
-    
+    public static implicit operator float(RationalNumber a) => (float) a.Numerator / a.Denominator;
+
     //Operator overload
     public static RationalNumber operator +(RationalNumber a) => a;
     public static RationalNumber operator -(RationalNumber a) => new RationalNumber(-a.Numerator, a.Denominator);
@@ -45,12 +45,14 @@ public struct RationalNumber : IComparable, IComparable<RationalNumber>, IEquata
 
     public int CompareTo(object obj)
     {
-        throw new NotImplementedException();
+        if (obj == null) return 1;
+        
+        return (int)(this - (float) obj);
     }
 
     public int CompareTo(RationalNumber other)
     {
-        throw new NotImplementedException();
+        return (int)(this - other);
     }
 
     public bool Equals(RationalNumber other)
