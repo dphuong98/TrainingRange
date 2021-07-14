@@ -62,11 +62,10 @@ public struct RationalNumber : IComparable, IComparable<RationalNumber>, IEquata
     public static RationalNumber operator -(RationalNumber a) => new RationalNumber(-a.Numerator, a.Denominator);
     
     public static RationalNumber operator +(RationalNumber a, RationalNumber b) =>
-        new RationalNumber(a.Numerator * b.Denominator + a.Denominator * b.Numerator, a.Denominator * b.Denominator)
-            .Reduce();
+        new RationalNumber(a.Numerator * b.Denominator + a.Denominator * b.Numerator, a.Denominator * b.Denominator);
     public static RationalNumber operator -(RationalNumber a, RationalNumber b) => a + -b;
     public static RationalNumber operator *(RationalNumber a, RationalNumber b) =>
-        new RationalNumber(a.Numerator * b.Numerator, a.Denominator * b.Denominator).Reduce();
+        new RationalNumber(a.Numerator * b.Numerator, a.Denominator * b.Denominator);
     public static RationalNumber operator /(RationalNumber a, RationalNumber b)
     {
         if (b.Numerator == 0)
@@ -106,7 +105,7 @@ public struct RationalNumber : IComparable, IComparable<RationalNumber>, IEquata
         return Numerator + "/" + Denominator;
     }
 
-    private RationalNumber Reduce()
+    private void Reduce()
     {
         if (Numerator == 0)
         {
@@ -124,7 +123,5 @@ public struct RationalNumber : IComparable, IComparable<RationalNumber>, IEquata
             Numerator = -Numerator;
             Denominator = -Denominator;
         }
-        
-        return this;
     }
 }

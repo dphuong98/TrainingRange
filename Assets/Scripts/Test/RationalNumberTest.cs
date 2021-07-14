@@ -4,14 +4,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using Rn = RationalNumber;
 
-public class GameManager : MonoBehaviour
+public class RationalNumberTest : MonoBehaviour
 {
+    public bool DebugMode = false;
+    
     private void Start()
     {
         TestRationalNumber();
     }
 
-    [ContextMenu("RationalNumber Test")]
+    private void OnGUI()
+    {
+        GUILayout.Space(20f);
+        GUILayout.Label("Spawn Prop");
+    }
+
     private void TestRationalNumber()
     {
         try
