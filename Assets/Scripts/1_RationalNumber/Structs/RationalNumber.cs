@@ -92,7 +92,10 @@ public struct RationalNumber : IComparable, IComparable<RationalNumber>, IEquata
 
     public int CompareTo(RationalNumber other)
     {
-        return (int)(this - other);
+        var difference = this - other;
+        if (difference > 0) return 1;
+        if (difference < 0) return -1;
+        return 0;
     }
 
     public bool Equals(RationalNumber other)
