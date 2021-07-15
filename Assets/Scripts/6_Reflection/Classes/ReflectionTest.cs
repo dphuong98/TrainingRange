@@ -4,5 +4,6 @@ using UnityEngine;
 
 public class ReflectionTest : MonoBehaviour
 {
-    public Object target;
+    public bool DeclaredOnly = false;
+    public Object ReflectionTarget;
 }

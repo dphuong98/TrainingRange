@@ -1,14 +1,20 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Testspam : MonoBehaviour
 {
-    public Vector3 lookAtPoint = Vector3.zero;
-    
+    [ContextMenu("DoTest")]
     // Update is called once per frame
-    void Update()
+    private void DoTest()
     {
-        transform.LookAt(lookAtPoint);
+        var type = typeof(TankController);
+        var tmp = type.GetFields().Select(f=> f.GetRequiredCustomModifiers().Length);
+        foreach (var VARIABLE in tmp)
+        {
+            Debug.Log(VARIABLE);
+        }
     }
 }
