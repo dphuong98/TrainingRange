@@ -340,8 +340,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee65799c045b6c040bd718f1f0be279a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DeclaredOnly: 1
-  ReflectionTarget: {fileID: 11500000, guid: 3275beb22adb4ad4baa66e0ebdea711b, type: 3}
+  DeclaredOnly: 0
+  ReflectionTarget: {fileID: 11500000, guid: 10d42069a22e55449b988201554809e6, type: 3}
 --- !u!114 &2130542184
 MonoBehaviour:
   m_ObjectHideFlags: 0

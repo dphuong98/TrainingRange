@@ -30,6 +30,11 @@ public static class MemberInfo
         throw new ArgumentException("Field did not contain any access modifier");
     }
 
+    public static string Modifier(this FieldInfo f)
+    {
+        return f.AccessModifier().ToString().ToLower();
+    }
+
     public static AccessModifiers AccessModifier(this PropertyInfo p)
     {
         if (p.SetMethod == null)
@@ -39,6 +44,11 @@ public static class MemberInfo
         var max = Math.Max((int)(p.GetMethod.AccessModifier()),
             (int)(p.GetMethod.AccessModifier()));
         return (AccessModifiers)max;
+    }
+    
+    public static string Modifier(this PropertyInfo p)
+    {
+        return p.AccessModifier().ToString().ToLower();
     }
 
     public static AccessModifiers AccessModifier(this MethodInfo m)
@@ -54,5 +64,10 @@ public static class MemberInfo
         if (m.IsPublic)
             return AccessModifiers.Public;
         throw new ArgumentException("Method did not contain any access modifier");
+    }
+    
+    public static string Modifier(this MethodInfo m)
+    {
+        return m.AccessModifier().ToString().ToLower();
     }
 }
