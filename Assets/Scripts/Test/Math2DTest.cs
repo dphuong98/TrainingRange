@@ -8,6 +8,12 @@ public class Math2DTest : MonoBehaviour
 {
     private void Start()
     {
+        PointTest();
+        LineTest();
+    }
+
+    void PointTest()
+    {
         var pt0 = Point.zero;
         var pt1 = new Point(2, 3);
         var pt2 = new Point(-3, 4);
@@ -37,6 +43,39 @@ public class Math2DTest : MonoBehaviour
         var crs1 = Point.Cross(pt1, pt2);
         var crs2 = Point.Cross(pt2, pt3);
         var crs3 = Point.Cross(pt1, pt3);
+        
+        var done = new bool();
+    }
+
+    void LineTest()
+    {
+        var ln1 = new Line(1, 2, 3);
+        var ln2 = new Line(1, 2, 2);
+        var ln3 = new Line(2, 0, 2);
+
+        Point intersection1 = new Point();
+        var in1 = ln1.Intersect(ln2, ref intersection1);
+        Point intersection2 = new Point();
+        var in2 = ln2.Intersect(ln3, ref intersection2);
+
+        var con1 = ln1.Contains(new Point(0, 0));
+        var con2 = ln2.Contains(new Point(4, -1));
+
+        var prj1 = ln1.Project(new Point(3, 4));
+        var prj2 = ln3.Project(new Point(3, 4));
+
+        var dis1 = ln1.Distance(new Point(3, 4));
+        var dis2 = ln3.Distance(new Point(3, 4));
+
+        try
+        {
+            var err1 = new Line(1, 0, 5);
+            err1.a = 0;
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
         
         var done = new bool();
     }
