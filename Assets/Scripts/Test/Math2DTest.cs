@@ -8,8 +8,8 @@ public class Math2DTest : MonoBehaviour
 {
     private void Start()
     {
-        PointTest();
-        LineTest();
+        //PointTest();
+        //LineTest();
     }
 
     void PointTest()
@@ -78,5 +78,10 @@ public class Math2DTest : MonoBehaviour
         }
         
         var done = new bool();
+    }
+
+    void LineSegmentTest()
+    {
+        var ln1 = new LineSegment(new Point(1, 2), new Point(2, 3));
     }
 }

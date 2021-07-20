@@ -59,6 +59,7 @@ namespace Math2D
         public bool Contains(Point p)
         {
             return a * p.x + b * p.y == c;
+            //TODO use epsilon for float comparision
         }
 
         // Find projection of the point `p` on this line 
