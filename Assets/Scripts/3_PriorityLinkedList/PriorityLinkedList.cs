@@ -38,6 +38,8 @@ public class PriorityLinkedList<T> :  IEnumerable<T>, ICollection<T>  where T : 
             return;
         }
 
+        //TODO Implement a faster search algorithm or just linear search. Performance prolly is not that important, just flexing
+        //https://www.geeksforgeeks.org/searching-algorithms/
         var node = data.BinarySearch(item, new ReverseCompare<T>());
         data.AddBefore(node, item);
     }

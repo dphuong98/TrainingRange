@@ -36,7 +36,7 @@ namespace Math2D
 
         public static float Distance(Point a, Point b)
         {
-            return (float)Math.Sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+            return (float) Math.Sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
         }
 
         public static Point operator +(Point a, Point b)
@@ -59,7 +59,7 @@ namespace Math2D
         public static float Cross(Point a, Point b)
         {
             return a.x * b.y - a.y * b.x;
-        }
+         }
 
         public override string ToString()
         {
@@ -68,7 +68,6 @@ namespace Math2D
 
         private static readonly Point zeroPoint = new Point(0, 0);
     
-        public static Point zero { get { return zeroPoint; }
-        }
+        public static Point zero { get { return zeroPoint; } }
     }
 }

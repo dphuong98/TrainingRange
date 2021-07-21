@@ -10,6 +10,7 @@ public class Math2DTest : MonoBehaviour
     {
         //PointTest();
         //LineTest();
+        LineSegmentTest();
     }
 
     void PointTest()
@@ -83,5 +84,26 @@ public class Math2DTest : MonoBehaviour
     void LineSegmentTest()
     {
         var ln1 = new LineSegment(new Point(1, 2), new Point(2, 3));
+        var ln2 = new LineSegment(new Point(1, 3), new Point(2, 2));
+        var ln3 = new LineSegment(new Point(-1, -1), new Point(-2, 0));
+        var ln4 = new LineSegment(new Point(2, 2), new Point(3, 3));
+
+        var con1 = ln1.Contains(new Point(1.465f, 2.465f));
+        var con2 = ln1.Contains(new Point(3f, 4f));
+        var con3 = ln1.Contains(new Point(4f, 4f));
+
+        var pt1 = new Point();
+        var in1 = ln1.Intersect(ln2, ref pt1);
+        var pt2 = new Point();
+        var in2 = ln1.Intersect(ln3, ref pt2);
+        var pt3 = new Point();
+        var in3 = ln1.Intersect(ln4, ref pt3);
+
+        var pt4 = new Point();
+        var in4 = ln1.Intersect(new Line(1, 1, 4), ref pt4);
+        var pt5 = new Point();
+        var in5 = ln1.Intersect(new Line(1, 1, 1), ref pt5);
+        
+        var done = new Point();
     }
 }
