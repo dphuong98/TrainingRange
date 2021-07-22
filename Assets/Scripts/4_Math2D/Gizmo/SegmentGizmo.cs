@@ -13,7 +13,8 @@ public class SegmentGizmo : MonoBehaviour
     {
         if (point1 == null || point2 == null)
         {
-            UnityEditor.EditorApplication.delayCall+= () => DestroyImmediate(gameObject);
+            DestroyImmediate(gameObject);
+            return;
         }
         
         var start = point1.transform.position;
