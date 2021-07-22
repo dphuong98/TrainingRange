@@ -5,10 +5,11 @@ using UnityEngine;
 
 namespace Math2D
 {
-    public class Line
+    public struct Line
     {
         private float _a;
         private float _b;
+        private float _c;
         public float a
         {
             get => _a;
@@ -27,13 +28,18 @@ namespace Math2D
                 CheckValid();
             }
         }
-        public float c { get; set; }
+
+        public float c
+        {
+            get => _c;
+            set => _c = value;
+        }
         
         public Line(float a, float b, float c)
         {
-            this.a = a;
-            this.b = b;
-            this.c = c;
+            _a = a;
+            _b = b;
+            _c = c;
             
             CheckValid();
         }
@@ -42,9 +48,9 @@ namespace Math2D
         {
             var slope = (b.y - a.y) / (b.x - a.x);
 
-            this.a = -slope;
-            this.b = 1;
-            this.c = -a.x * slope + a.y;
+            _a = -slope;
+            _b = 1;
+            _c = -a.x * slope + a.y;
             
             CheckValid();
         }

@@ -103,6 +103,10 @@ public class Math2DTest : MonoBehaviour
         var in4 = ln1.Intersect(new Line(1, 1, 4), ref pt4);
         var pt5 = new Point();
         var in5 = ln1.Intersect(new Line(1, 1, 1), ref pt5);
+        var pt6 = new Point();
+        var in6 = ln1.Intersect(new Line(0, 1, 2), ref pt6);
+        var pt7 = new Point();
+        var in7 = ln1.Intersect(new Line(-1, 1, 1), ref pt6);
         
         var done = new Point();
     }
