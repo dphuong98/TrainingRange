@@ -30,7 +30,7 @@ public class LineGizmo : MonoBehaviour
     private void OnDrawGizmos()
     {
         var point = lineEquation.Project(new Point(0, 0));
-        var direction = new Vector3(-a, b, 0) * 20;
+        var direction = new Vector3(-b, a, 0) * 20f;
         
         Gizmos.color = lineColor;
         Gizmos.DrawRay(new Vector3(point.x, point.y, 0), direction);
