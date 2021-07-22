@@ -6,8 +6,22 @@ using JetBrains.Annotations;
 using UnityEngine;
 using Random = System.Random;
 
-public class String : MonoBehaviour
+public static class String
 {
+    public static string Reverse(this string s)
+    {
+        char[] charArray = s.ToCharArray();
+        Array.Reverse( charArray );
+        return new string( charArray );
+    }
+
+    public static string Sort(this string s)
+    {
+        char[] charArray = s.ToCharArray();
+        Array.Sort(charArray);
+        return new string( charArray );
+    }
+    
     public static string JoinFilter(string separator, IEnumerable<string> strings)
     {
         return string.Join(separator, strings.Where(s => !string.IsNullOrEmpty(s)));

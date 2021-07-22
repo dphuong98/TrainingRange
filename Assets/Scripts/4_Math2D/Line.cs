@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Math2D
 {
-    public struct Line
+    public class Line
     {
         private float _a;
         private float _b;
@@ -105,6 +105,11 @@ namespace Math2D
         {
             //https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
             return (float)(Math.Abs(a * p.x + b * p.y - c) / Math.Sqrt(a * a + b * b));
+        }
+
+        public override string ToString()
+        {
+            return a + "x + " + b + "y = " + c;
         }
     }
 }

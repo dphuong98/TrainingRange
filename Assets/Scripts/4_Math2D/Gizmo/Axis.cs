@@ -37,7 +37,7 @@ public class Axis : MonoBehaviour
         }
 
         var thickness = (Vector3)(Vector2.Perpendicular(start - end).normalized * 1/50);
-        Gizmos.color = Color.black;
+        Gizmos.color = AxisColor;
         Gizmos.DrawLine(start, end);
         Gizmos.DrawLine(start + thickness, end + thickness);
         Gizmos.DrawLine(start - thickness, end - thickness);
