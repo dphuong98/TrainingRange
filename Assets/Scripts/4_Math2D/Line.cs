@@ -78,17 +78,6 @@ namespace Math2D
             return (a * p.x + b * p.y).NearlyEqual(c);
         }
 
-        public int Side(Point p)
-        {
-            var dif = a * p.x + b * p.y - c;
-            if (dif.NearlyEqual(0))
-            {
-                return 0;
-            }
-            if (dif < 0) return -1;
-            return 1;
-        }
-
         // Find projection of the point `p` on this line 
         public Point Project(Point p)
         {

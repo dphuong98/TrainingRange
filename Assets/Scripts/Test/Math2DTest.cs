@@ -10,7 +10,7 @@ public class Math2DTest : MonoBehaviour
     {
         //PointTest();
         //LineTest();
-        //LineSegmentTest();
+        LineSegmentTest();
     }
 
     void PointTest()

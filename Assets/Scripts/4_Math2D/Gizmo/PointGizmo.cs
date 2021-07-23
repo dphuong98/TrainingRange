@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PointGizmo : MonoBehaviour
 {
+    //TODO Snap point to line if the point is contained on that line. Gotta rip the point out of need detachment
     private void OnDrawGizmos()
     {
         var text = gameObject.name;

@@ -50,18 +50,19 @@ public class Math2DWindow : EditorWindow
         {
             SpawnPoint();
         }
-        
+
         if (GUILayout.Button(Resources.Load<Texture>("Icons/Segment"), GUILayout.Width(buttonWidth),
             GUILayout.Height(buttonHeight)))
         {
             SpawnSegment();
         }
-        
+
         if (GUILayout.Button(Resources.Load<Texture>("Icons/Line"), GUILayout.Width(buttonWidth),
             GUILayout.Height(buttonHeight)))
         {
             SpawnLine();
         }
+
         GUILayout.EndHorizontal();
     }
 
