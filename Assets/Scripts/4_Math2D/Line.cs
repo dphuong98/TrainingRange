@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Math2D
 {
-    public class Line
+    public struct Line
     {
         private float _a;
         private float _b;
@@ -87,6 +87,17 @@ namespace Math2D
             return new Point(
                 (b * ( b*p.x - a*p.y) + a*c) / (a*a+b*b),
                 (a * (-b*p.x + a*p.y) + b*c) / (a*a+b*b) );
+        }
+        
+        public int Side(Point p)
+        {
+            var dif = a * p.x + b * p.y - c;
+            if (dif.NearlyEqual(0))
+            {
+                return 0;
+            }
+            if (dif < 0) return -1;
+            return 1;
         }
 
         // Calculate distance from point `p` to this line
