@@ -6,48 +6,40 @@ using UnityEngine;
 
 public class LineGizmo : MonoBehaviour
 {
-    public float a;
-    public float b;
-    public float c;
+    public GameObject point1;
+    public GameObject point2;
+
     public Color lineColor = Color.blue;
     
-    private Line lineEquation;
-
-    private void OnValidate()
-    {
-        if (gameObject.activeSelf == false) return; //OnValidate also update for prefabs
-        
-        try
-        {
-            SetEquation(new Line(a, b, c));
-        }
-        catch
-        {
-            // ignored
-        }
-    }
+    private Vector3 start;
+    private Vector3 end;
 
     private void OnDrawGizmos()
     {
-        var point = lineEquation.Project(new Point(0, 0));
-        var direction = new Vector3(-b, a, 0) * 20f;
+        if (point1 == null || point2 == null)
+        {
+            if (gameObject.IsPrefab()) return;
+
+            DestroyImmediate(gameObject);
+            return;
+        }
+        
+        start = point1.transform.position;
+        end = point2.transform.position;
+
+        var point = (start + end) / 2;
+        var direction = (start - end) * 20f;
         
         Gizmos.color = lineColor;
         Gizmos.DrawRay(new Vector3(point.x, point.y, 0), direction);
         Gizmos.DrawRay(new Vector3(point.x, point.y, 0), -direction);
     }
 
-    public void SetEquation(Line equation)
-    {
-        lineEquation = equation;
-        name = lineEquation.ToString();
-        a = lineEquation.a;
-        b = lineEquation.b;
-        c = lineEquation.c;
-    }
-
     public Line GetLine()
     {
-        return lineEquation;
+        start = point1.transform.position;
+        end = point2.transform.position;
+        
+        return new Line(new Point(start.x, start.y), new Point(end.x, end.y));;
     }
 }

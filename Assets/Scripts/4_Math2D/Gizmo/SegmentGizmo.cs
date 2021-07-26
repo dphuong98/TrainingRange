@@ -19,6 +19,8 @@ public class SegmentGizmo : MonoBehaviour
     {
         if (point1 == null || point2 == null)
         {
+            if (gameObject.IsPrefab()) return;
+            
             DestroyImmediate(gameObject);
             return;
         }
@@ -38,6 +40,8 @@ public class SegmentGizmo : MonoBehaviour
 
     public LineSegment GetLineSegment()
     {
+        start = point1.transform.position;
+        end = point2.transform.position;
         return new LineSegment(new Point(start.x, start.y), new Point(end.x, end.y));
     }
 }

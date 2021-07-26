@@ -9,6 +9,8 @@ using UnityEngine.UIElements;
 public class Math2DWindow : EditorWindow
 {
     private bool isFloating;
+    private float windowMinWidth = 60;
+    private float windowMinHeight = 160;
     private float buttonWidth = 50f;
     private float buttonHeight = 50f;
 
@@ -29,6 +31,8 @@ public class Math2DWindow : EditorWindow
     
     private void Awake()
     {
+        minSize = new Vector2(windowMinWidth, windowMinHeight);
+        
         math2D = GameObject.Find("Math2D");
         if (math2D == null)
         {
@@ -71,8 +75,10 @@ public class Math2DWindow : EditorWindow
                 ShowGenericMenu();
                 break;
         }
-
+        
         GUILayout.BeginHorizontal();
+        GUILayout.Space(5f);
+        GUILayout.BeginVertical();
         if (GUILayout.Button(Resources.Load<Texture>("Icons/Point"), GUILayout.Width(buttonWidth),
             GUILayout.Height(buttonHeight)))
         {
@@ -91,29 +97,28 @@ public class Math2DWindow : EditorWindow
         {
             SpawnLine();
         }
-
+        
+        GUILayout.EndVertical();
         GUILayout.EndHorizontal();
     }
 
     private void SpawnLine()
     {
-        Line newLineEquation;
-        
         if (Selection.objects.Length == 2)
         {
             //Line through 2 points
-            var points = Selection.objects.Take(2).Select(s => ((GameObject)s).transform.position).ToArray();
-            newLineEquation = new Line(new Point(points[0].x, points[0].y), new Point(points[1].x, points[1].y));
-        }
-        else
-        {
-            //New line: y = x
-            newLineEquation = new Line(-1, 1, 0);
-        }
+            var points = Selection.objects.Take(2).Select(s => (GameObject)s).ToArray();
+            
+            var newLineName =  "-" + (points[0].name + points[1].name).Sort() + "-";
+            if (lines.Find(newLineName) != null) return;
 
-        if (lines.Find(newLineEquation.ToString()) != null) return;
-        
-        Instantiate(linePrefab, lines).GetComponent<LineGizmo>().SetEquation(newLineEquation);
+            var newLine = Instantiate(linePrefab, lines);
+            newLine.name = newLineName;
+
+            var gizmo = newLine.GetComponent<LineGizmo>();
+            gizmo.point1 = points[0];
+            gizmo.point2 = points[1];
+        }
     }
 
     private void SpawnPoint()
