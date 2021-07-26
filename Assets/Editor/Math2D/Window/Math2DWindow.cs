@@ -1,11 +1,14 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 using System.Linq;
 using Math2D;
 using TreeEditor;
+using UnityEngine.UIElements;
 
 public class Math2DWindow : EditorWindow
 {
+    private bool isFloating;
     private float buttonWidth = 50f;
     private float buttonHeight = 50f;
 
@@ -23,7 +26,7 @@ public class Math2DWindow : EditorWindow
     {
         GetWindow<Math2DWindow>("Math2D");
     }
-
+    
     private void Awake()
     {
         math2D = GameObject.Find("Math2D");
@@ -42,8 +45,33 @@ public class Math2DWindow : EditorWindow
         linePrefab = Resources.Load("Prefabs/Math2D/Line") as GameObject;
     }
 
+    void SetIsUtilityWindow(bool isUtilityWindow)
+    {
+        var windowTitle = titleContent;
+        Close();
+        var res = GetWindow(GetType(), isUtilityWindow);
+        ((Math2DWindow) res).isFloating = isUtilityWindow;
+        res.titleContent = windowTitle;
+    }
+
+    private void ShowGenericMenu()
+    {
+        var menu = new GenericMenu();
+        menu.AddItem(new GUIContent("Window/Open as Floating Window", ""), isFloating, () => SetIsUtilityWindow(true));
+        menu.AddItem(new GUIContent("Window/Open as Dockable Window", ""), !isFloating, () => SetIsUtilityWindow(false));
+        menu.ShowAsContext();
+    }
+
     private void OnGUI()
     {
+        Event e = Event.current;
+        switch (e.type)
+        {
+            case EventType.ContextClick:
+                ShowGenericMenu();
+                break;
+        }
+
         GUILayout.BeginHorizontal();
         if (GUILayout.Button(Resources.Load<Texture>("Icons/Point"), GUILayout.Width(buttonWidth),
             GUILayout.Height(buttonHeight)))

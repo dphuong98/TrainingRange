@@ -7,8 +7,8 @@ namespace Math2D
 {
     public struct LineSegment
     {
-        public new Point a;
-        public new Point b;
+        public Point a;
+        public Point b;
 
         public LineSegment(Point a, Point b)
         {

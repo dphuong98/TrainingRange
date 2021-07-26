@@ -44,8 +44,6 @@ public class Math2DTest : MonoBehaviour
         var crs1 = Point.Cross(pt1, pt2);
         var crs2 = Point.Cross(pt2, pt3);
         var crs3 = Point.Cross(pt1, pt3);
-        
-        var done = new bool();
     }
 
     void LineTest()
@@ -77,8 +75,6 @@ public class Math2DTest : MonoBehaviour
         {
             Debug.Log(e.Message);
         }
-        
-        var done = new bool();
     }
 
     void LineSegmentTest()
@@ -106,8 +102,6 @@ public class Math2DTest : MonoBehaviour
         var pt6 = new Point();
         var in6 = ln1.Intersect(new Line(0, 1, 2), ref pt6);
         var pt7 = new Point();
-        var in7 = ln1.Intersect(new Line(-1, 1, 1), ref pt6);
-        
-        var done = new Point();
+        var in7 = ln1.Intersect(new Line(-1, 1, 1), ref pt7);
     }
 }
