@@ -109,7 +109,7 @@ public class Math2DWindow : EditorWindow
             //Line through 2 points
             var points = Selection.objects.Take(2).Select(s => (GameObject)s).ToArray();
             
-            var newLineName =  "-" + (points[0].name + points[1].name).Sort() + "-";
+            var newLineName = (points[0].name + points[1].name).Sort();
             if (lines.Find(newLineName) != null) return;
 
             var newLine = Instantiate(linePrefab, lines);
