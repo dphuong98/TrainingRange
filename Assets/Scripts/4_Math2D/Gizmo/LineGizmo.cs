@@ -45,4 +45,9 @@ public class LineGizmo : MonoBehaviour
         b = lineEquation.b;
         c = lineEquation.c;
     }
+
+    public Line GetLine()
+    {
+        return lineEquation;
+    }
 }

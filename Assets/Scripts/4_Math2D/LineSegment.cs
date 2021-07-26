@@ -34,11 +34,13 @@ namespace Math2D
 
         public bool Intersect(LineSegment other, ref Point intersection)
         {
+            //Alternative: https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line_segment
             return base.Intersect(other, ref intersection) && Contains(intersection) && other.Contains(intersection);
         }
 
         public bool Intersect(Line line, ref Point intersection)
         {
+            //Alternative: Check if line is strictly one one side of the line
             return base.Intersect(line, ref intersection) && Contains(intersection);
         }
 

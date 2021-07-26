@@ -2,7 +2,7 @@
 
 public static class Float
 {
-    private static float TOLERANCE = 1E-6F;
+    private static float TOLERANCE = 1E-5F;
     public static bool NearlyEqual(this float a, float b)
     {
         //Not safe

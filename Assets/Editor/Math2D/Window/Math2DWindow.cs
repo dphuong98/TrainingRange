@@ -48,6 +48,7 @@ public class Math2DWindow : EditorWindow
         if (GUILayout.Button(Resources.Load<Texture>("Icons/Point"), GUILayout.Width(buttonWidth),
             GUILayout.Height(buttonHeight)))
         {
+            //TODO spawn folder if not found
             SpawnPoint();
         }
 
