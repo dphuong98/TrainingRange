@@ -14,11 +14,15 @@ namespace Math2D
         {
             if (line1 == null || line2 == null)
                 return false;
-
+            
+            if (!IntersectionManager.ShowIntersection) return false;
+            
             var intersection = new Point();
             var equation1 = line1.GetLine();
             var equation2 = line2.GetLine();
             if (!equation1.Intersect(equation2, ref intersection)) return false;
+            
+            HideCoord = !IntersectionManager.ShowCoordinate;
 
             transform.position = new Vector3(intersection.x, intersection.y, 0);
             return true;

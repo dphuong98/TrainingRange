@@ -7,22 +7,27 @@ namespace Math2D
 {
     public class PointGizmo : MonoBehaviour
     {
-        public bool HideName;    
+        public bool HideName;
+        public bool HideCoord = true;
     
         //TODO Snap point to line if the point is contained on that line. Gotta rip the point out of need detachment
         protected virtual void OnDrawGizmos()
         {
-            var text = HideName? "" : gameObject.name;
+            var text = (HideName? "" : gameObject.name) + (HideCoord? "" : GetCoord());
 
             if (Selection.activeTransform == transform)
             {
                 text += HideName ? gameObject.name: "";
-                
-                var position = transform.position;
-                text += " (" + Math.Round(position.x, 2) + ", " + Math.Round(position.y, 2) + ")";
+                text += HideCoord ? GetCoord() : "";
             }
 
             Handles.Label(transform.position + new Vector3(-0.5f, 1f), text, EditorStyles.boldLabel);
+        }
+
+        private string GetCoord()
+        {
+            var position = transform.position;
+            return " (" + Math.Round(position.x, 2) + ", " + Math.Round(position.y, 2) + ")";
         }
     }
 }
