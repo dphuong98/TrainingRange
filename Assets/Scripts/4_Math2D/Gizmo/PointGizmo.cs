@@ -8,7 +8,7 @@ namespace Math2D
     public class PointGizmo : MonoBehaviour
     {
         public bool HideName;
-        public bool HideCoord = true;
+        public bool HideCoord;
     
         //TODO Snap point to line if the point is contained on that line. Gotta rip the point out of need detachment
         protected virtual void OnDrawGizmos()
@@ -21,7 +21,7 @@ namespace Math2D
                 text += HideCoord ? GetCoord() : "";
             }
 
-            Handles.Label(transform.position + new Vector3(-0.5f, 1f), text, EditorStyles.boldLabel);
+            Handles.Label(transform.position + new Vector3(-0.25f, 0.5f), text, EditorStyles.boldLabel);
         }
 
         private string GetCoord()

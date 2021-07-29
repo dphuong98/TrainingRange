@@ -10,8 +10,7 @@ namespace Math2D
 {
     public class IntersectionManager : MonoBehaviour
     {
-        public static bool ShowIntersection;
-        
+        public static bool ShowIntersection = true;
         public static bool ShowCoordinate;
 
         public Transform segments;
@@ -36,12 +35,8 @@ namespace Math2D
                     var line2 = lineGroup[j].GetLine();
                 
                     if (!line1.Intersect(line2, ref intersection)) continue;
-
-                    var intersectionName = lineGroup[i].name + " x " + lineGroup[j].name;
-                    if (!Points.Exist(intersectionName))
-                    {
-                        Points.SpawnIntersection(intersectionName, lineGroup[i], lineGroup[j]);
-                    }
+                    
+                    Points.SpawnIntersection(lineGroup[i], lineGroup[j]);
                 }
             }
         }

@@ -6,6 +6,7 @@ namespace Math2D
 {
     public interface ILine
     {
+        Point Project(Point p);
         bool Intersect(ILine other, ref Point intersection);
     }
 }

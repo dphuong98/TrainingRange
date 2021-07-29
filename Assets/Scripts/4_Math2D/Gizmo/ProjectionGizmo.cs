@@ -4,18 +4,21 @@ using UnityEngine;
 
 namespace Math2D
 {
-    public class ProjectionGizmo : MonoBehaviour
+    public class ProjectionGizmo : ConditionalPointGizmo
     {
-        // Start is called before the first frame update
-        void Start()
-        {
+        public Transform point;
+        public Transform line;
         
-        }
+        protected override bool IsValid()
+        {
+            if (point == null || line == null)
+                return false;
 
-        // Update is called once per frame
-        void Update()
-        {
-        
+            var lineEquation = line.GetLine();
+            var projectionPoint = lineEquation.Project(new Point(point.position.x, point.position.y));
+            
+            transform.position = new Vector3(projectionPoint.x, projectionPoint.y, 0);
+            return true;
         }
     }
 }

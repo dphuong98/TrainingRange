@@ -17,14 +17,14 @@ namespace Math2D
             
             if (!IntersectionManager.ShowIntersection) return false;
             
-            var intersection = new Point();
+            var intersectionPoint = new Point();
             var equation1 = line1.GetLine();
             var equation2 = line2.GetLine();
-            if (!equation1.Intersect(equation2, ref intersection)) return false;
+            if (!equation1.Intersect(equation2, ref intersectionPoint)) return false;
             
             HideCoord = !IntersectionManager.ShowCoordinate;
 
-            transform.position = new Vector3(intersection.x, intersection.y, 0);
+            transform.position = new Vector3(intersectionPoint.x, intersectionPoint.y, 0);
             return true;
         }
     }

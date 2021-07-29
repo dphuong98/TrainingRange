@@ -10,18 +10,15 @@ public class Math2DWindow : EditorWindow
 {
     private bool isFloating;
     private float windowMinWidth = 200;
-    private float windowMinHeight = 160;
+    private float windowMinHeight = 220;
     private float buttonWidth = 50f;
     private float buttonHeight = 50f;
 
     private GameObject math2D;
     
     private PointManager points;
-    private Transform segments;
-    private Transform lines;
-    
-    private GameObject segmentPrefab;
-    private GameObject linePrefab;
+    private SegmentManager segments;
+    private LineManager lines;
 
     [MenuItem("Custom/Math2D")]
     private static void ShowWindow()
@@ -41,15 +38,11 @@ public class Math2DWindow : EditorWindow
         }
         
         points = math2D.transform.Find("Points").GetComponent<PointManager>();
-
-        segments = math2D.transform.Find("Segments");
-        lines = math2D.transform.Find("Lines");
-        
-        segmentPrefab = Resources.Load("Prefabs/Math2D/Segment") as GameObject;
-        linePrefab = Resources.Load("Prefabs/Math2D/Line") as GameObject;
+        segments = math2D.transform.Find("Segments").GetComponent<SegmentManager>();
+        lines = math2D.transform.Find("Lines").GetComponent<LineManager>();
     }
 
-    void SetIsUtilityWindow(bool isUtilityWindow)
+    private void SetIsUtilityWindow(bool isUtilityWindow)
     {
         var windowTitle = titleContent;
         Close();
@@ -68,7 +61,7 @@ public class Math2DWindow : EditorWindow
 
     private void OnGUI()
     {
-        Event e = Event.current;
+        var e = Event.current;
         switch (e.type)
         {
             case EventType.ContextClick:
@@ -89,15 +82,45 @@ public class Math2DWindow : EditorWindow
         if (GUILayout.Button(Resources.Load<Texture>("Icons/Segment"), GUILayout.Width(buttonWidth),
             GUILayout.Height(buttonHeight)))
         {
-            SpawnSegment();
+            var points = getSelectedGameObjects(2);
+            if (points != null)
+                segments.SpawnSegment(points[0], points[1]);
         }
 
         if (GUILayout.Button(Resources.Load<Texture>("Icons/Line"), GUILayout.Width(buttonWidth),
             GUILayout.Height(buttonHeight)))
         {
-            SpawnLine();
+            var points = getSelectedGameObjects(2);
+            if (points != null)
+                lines.SpawnLine(points[0], points[1]);
         }
         
+        if (GUILayout.Button(Resources.Load<Texture>("Icons/Projection"), GUILayout.Width(buttonWidth),
+            GUILayout.Height(buttonHeight)))
+        {
+            var elements = getSelectedGameObjects(2);
+            if (elements != null)
+            {
+                //TODO Refactor
+                var element1 = elements[0].transform.GetLine();
+                var element2 = elements[1].transform.GetLine();
+
+                if (element1 == null && element2 != null)
+                {
+                    //Element 1 is a point and element 2 is a line/segment
+                    var projection = points.SpawnProjection(elements[0].transform, elements[1].transform);
+                    segments.SpawnSegment(projection, elements[0]);
+                }
+                
+                if (element2 == null && element1 != null)
+                {
+                    //Element 2 is a point and element 1 is a line/segment
+                    var projection = points.SpawnProjection(elements[1].transform, elements[0].transform);
+                    segments.SpawnSegment(projection, elements[1]);
+                }
+            }
+        }
+
         GUILayout.EndVertical();
         
         GUILayout.BeginVertical();
@@ -109,38 +132,9 @@ public class Math2DWindow : EditorWindow
         GUILayout.EndHorizontal();
     }
 
-    private void SpawnLine()
+    private GameObject[] getSelectedGameObjects(int count)
     {
-        if (Selection.objects.Length != 2) return;
-        
-        //Line through 2 points
-        var points = Selection.objects.Take(2).Select(s => (GameObject)s).ToArray();
-            
-        var newLineName = (points[0].name + points[1].name).Sort();
-        if (lines.Find(newLineName) != null) return;
-
-        var newLine = Instantiate(linePrefab, lines);
-        newLine.name = newLineName;
-
-        var gizmo = newLine.GetComponent<LineGizmo>();
-        gizmo.point1 = points[0];
-        gizmo.point2 = points[1];
-    }
-
-    private void SpawnSegment()
-    {
-        if (Selection.objects.Length != 2) return;
-        
-        var points = Selection.objects.Take(2).Select(s => (GameObject)s).ToArray();
-            
-        var newSegmentName =  (points[0].name + points[1].name).Sort();
-        if (segments.Find(newSegmentName) != null) return;
-            
-        var newSegment = Instantiate(segmentPrefab, segments);
-        newSegment.name = newSegmentName;
-            
-        var gizmo = newSegment.GetComponent<SegmentGizmo>();
-        gizmo.point1 = points[0];
-        gizmo.point2 = points[1];
+        if (Selection.objects.Length != count) return null;
+        return Selection.objects.Take(count).Select(s => (GameObject)s).ToArray();
     }
 }

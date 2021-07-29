@@ -8,12 +8,11 @@ namespace Math2D
 {
     public class PointManager : MonoBehaviour
     {
-        [SerializeField]
-        private GameObject pointPrefab;
-        [SerializeField]
-        private GameObject intersectionPrefab;
+        [SerializeField] private GameObject pointPrefab;
+        [SerializeField] private GameObject intersectionPrefab;
+        [SerializeField] private GameObject projectionPrefab;
 
-        public void SpawnPoint()
+        public GameObject SpawnPoint()
         {
             //TODO naming method after "Z"
             foreach (var c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
@@ -23,30 +22,58 @@ namespace Math2D
             
                 var cameraPosition = SceneView.lastActiveSceneView.camera.transform.position;
                 var pointPosition = new Vector3(cameraPosition.x, cameraPosition.y, 0);
+                
                 var newPoint = Instantiate(pointPrefab, pointPosition, Quaternion.identity, transform);
                 newPoint.name = c.ToString();
-                break;
+
+                return newPoint;
             }
+
+            return null;
         }
     
-        public void SpawnPoint(string name, Point position)
+        public GameObject SpawnPoint(string name, Point position)
         {
-            if (Exist(name)) return;
+            if (Exist(name)) return null;
         
-            Instantiate(pointPrefab, new Vector3(position.x, position.y, 0), Quaternion.identity, transform).name = name;
+            var newPoint = Instantiate(pointPrefab, new Vector3(position.x, position.y, 0), Quaternion.identity, transform);
+            newPoint.name = name;
+            
+            return newPoint;
         }
     
-        public void SpawnIntersection(string name, Transform line1, Transform line2)
+        public GameObject SpawnIntersection(Transform line1, Transform line2)
         {
-            if (Exist(name)) return;
-        
+            if (line1 == null || line2 == null) return null;
+
+            var intersectionName = line1.name + " x " + line2.name;
+            if (Exist(intersectionName)) return null;
+
             var newIntersection = Instantiate(intersectionPrefab, transform);
-            newIntersection.name = name;
+            newIntersection.name = intersectionName;
 
             var gizmo = newIntersection.GetComponent<IntersectionGizmo>();
-            gizmo.HideName = true;
             gizmo.line1 = line1;
             gizmo.line2 = line2;
+
+            return newIntersection;
+        }
+
+        public GameObject SpawnProjection(Transform point, Transform line)
+        {
+            if (point == null || line == null) return null;
+            
+            var projectionName = point.name + " -> " + line.name;
+            if (Exist(projectionName)) return null;
+            
+            var newProjection = Instantiate(projectionPrefab, transform);
+            newProjection.name = projectionName;
+
+            var gizmo = newProjection.GetComponent<ProjectionGizmo>();
+            gizmo.point = point;
+            gizmo.line = line;
+            
+            return newProjection;
         }
 
         public Transform GetPoint(string name)

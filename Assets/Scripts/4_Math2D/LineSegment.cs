@@ -87,6 +87,11 @@ namespace Math2D
             return a +" -> " + b;
         }
 
+        public Point Project(Point p)
+        {
+            return new Line(a, b).Project(p);
+        }
+
         public bool Intersect(ILine other, ref Point intersection)
         {
             if (other is LineSegment segment)
