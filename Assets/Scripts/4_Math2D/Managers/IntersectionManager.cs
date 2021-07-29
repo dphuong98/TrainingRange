@@ -10,12 +10,8 @@ namespace Math2D
 {
     public class IntersectionManager : MonoBehaviour
     {
-        [SerializeField]
-        private bool showIntersection;
         public static bool ShowIntersection;
         
-        [SerializeField]
-        private bool showCoordinate;
         public static bool ShowCoordinate;
 
         public Transform segments;
@@ -24,15 +20,9 @@ namespace Math2D
         [SerializeField]
         private PointManager Points;
 
-        private void OnValidate()
-        {
-            ShowIntersection = showIntersection;
-            ShowCoordinate = showCoordinate;
-        }
-
         private void OnDrawGizmos()
         {
-            if (!showIntersection) return;
+            if (!ShowIntersection) return;
             
             var intersection = new Point();
 

@@ -9,7 +9,7 @@ using UnityEngine.UIElements;
 public class Math2DWindow : EditorWindow
 {
     private bool isFloating;
-    private float windowMinWidth = 60;
+    private float windowMinWidth = 200;
     private float windowMinHeight = 160;
     private float buttonWidth = 50f;
     private float buttonHeight = 50f;
@@ -39,8 +39,9 @@ public class Math2DWindow : EditorWindow
             math2D = (GameObject) Instantiate(Resources.Load("Prefabs/Math2D/Math2D"));
             math2D.name = "Math2D";
         }
-
+        
         points = math2D.transform.Find("Points").GetComponent<PointManager>();
+
         segments = math2D.transform.Find("Segments");
         lines = math2D.transform.Find("Lines");
         
@@ -98,6 +99,13 @@ public class Math2DWindow : EditorWindow
         }
         
         GUILayout.EndVertical();
+        
+        GUILayout.BeginVertical();
+        GUILayout.Label("Intersections", EditorStyles.boldLabel);
+        IntersectionManager.ShowIntersection = GUILayout.Toggle(IntersectionManager.ShowIntersection,"ShowIntersection");
+        IntersectionManager.ShowCoordinate = GUILayout.Toggle(IntersectionManager.ShowCoordinate,"ShowCoordinate");
+        GUILayout.EndVertical();
+        
         GUILayout.EndHorizontal();
     }
 
