@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Math2D
 {
-    public struct LineSegment
+    public struct LineSegment : ILine
     {
         public Point a;
         public Point b;
@@ -85,6 +85,21 @@ namespace Math2D
         public override string ToString()
         {
             return a +" -> " + b;
+        }
+
+        public bool Intersect(ILine other, ref Point intersection)
+        {
+            if (other is LineSegment segment)
+            {
+                return Intersect(segment, ref intersection);
+            }
+
+            if (other is Line line)
+            {
+                return Intersect(line, ref intersection);
+            }
+
+            return false;
         }
     }
 }

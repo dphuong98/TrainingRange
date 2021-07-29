@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Math2D
 {
-    public struct Line
+    public struct Line : ILine
     {
         private float _a;
         private float _b;
@@ -110,6 +110,21 @@ namespace Math2D
         public override string ToString()
         {
             return a + "x + " + b + "y = " + c;
+        }
+
+        public bool Intersect(ILine other, ref Point intersection)
+        {
+            if (other is LineSegment segment)
+            {
+                return segment.Intersect(this, ref intersection);
+            }
+
+            if (other is Line line)
+            {
+                return line.Intersect(this, ref intersection);
+            }
+
+            return false;
         }
     }
 }

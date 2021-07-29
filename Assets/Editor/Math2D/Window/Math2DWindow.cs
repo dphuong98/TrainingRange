@@ -15,11 +15,11 @@ public class Math2DWindow : EditorWindow
     private float buttonHeight = 50f;
 
     private GameObject math2D;
-    private Transform points;
+    
+    private PointManager points;
     private Transform segments;
     private Transform lines;
     
-    private GameObject pointPrefab;
     private GameObject segmentPrefab;
     private GameObject linePrefab;
 
@@ -40,11 +40,10 @@ public class Math2DWindow : EditorWindow
             math2D.name = "Math2D";
         }
 
-        points = math2D.transform.Find("Points");
+        points = math2D.transform.Find("Points").GetComponent<PointManager>();
         segments = math2D.transform.Find("Segments");
         lines = math2D.transform.Find("Lines");
         
-        pointPrefab = Resources.Load("Prefabs/Math2D/Point") as GameObject;
         segmentPrefab = Resources.Load("Prefabs/Math2D/Segment") as GameObject;
         linePrefab = Resources.Load("Prefabs/Math2D/Line") as GameObject;
     }
@@ -83,7 +82,7 @@ public class Math2DWindow : EditorWindow
             GUILayout.Height(buttonHeight)))
         {
             //TODO spawn folder if not found
-            SpawnPoint();
+            points.SpawnPoint();
         }
 
         if (GUILayout.Button(Resources.Load<Texture>("Icons/Segment"), GUILayout.Width(buttonWidth),
@@ -104,56 +103,36 @@ public class Math2DWindow : EditorWindow
 
     private void SpawnLine()
     {
-        if (Selection.objects.Length == 2)
-        {
-            //Line through 2 points
-            var points = Selection.objects.Take(2).Select(s => (GameObject)s).ToArray();
+        if (Selection.objects.Length != 2) return;
+        
+        //Line through 2 points
+        var points = Selection.objects.Take(2).Select(s => (GameObject)s).ToArray();
             
-            var newLineName = (points[0].name + points[1].name).Sort();
-            if (lines.Find(newLineName) != null) return;
+        var newLineName = (points[0].name + points[1].name).Sort();
+        if (lines.Find(newLineName) != null) return;
 
-            var newLine = Instantiate(linePrefab, lines);
-            newLine.name = newLineName;
+        var newLine = Instantiate(linePrefab, lines);
+        newLine.name = newLineName;
 
-            var gizmo = newLine.GetComponent<LineGizmo>();
-            gizmo.point1 = points[0];
-            gizmo.point2 = points[1];
-        }
+        var gizmo = newLine.GetComponent<LineGizmo>();
+        gizmo.point1 = points[0];
+        gizmo.point2 = points[1];
     }
 
-    private void SpawnPoint()
+    private void SpawnSegment()
     {
-        //TODO naming method after "Z"
-        foreach (var c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
-        {
-            if (points.Find(c.ToString()) != null)
-                continue;
+        if (Selection.objects.Length != 2) return;
+        
+        var points = Selection.objects.Take(2).Select(s => (GameObject)s).ToArray();
             
-            var cameraPosition = SceneView.lastActiveSceneView.camera.transform.position;
-            var newPoint = Instantiate(pointPrefab, cameraPosition, Quaternion.identity, points);
-            newPoint.name = c.ToString();
+        var newSegmentName =  (points[0].name + points[1].name).Sort();
+        if (segments.Find(newSegmentName) != null) return;
             
-            Selection.activeTransform = newPoint.transform;
-            SceneView.lastActiveSceneView.FrameSelected();
-            break;
-        }
-    }
-
-    void SpawnSegment()
-    {
-        if (Selection.objects.Length == 2)
-        {
-            var points = Selection.objects.Take(2).Select(s => (GameObject)s).ToArray();
+        var newSegment = Instantiate(segmentPrefab, segments);
+        newSegment.name = newSegmentName;
             
-            var newSegmentName =  (points[0].name + points[1].name).Sort();
-            if (segments.Find(newSegmentName) != null) return;
-            
-            var newSegment = Instantiate(segmentPrefab, segments);
-            newSegment.name = newSegmentName;
-            
-            var gizmo = newSegment.GetComponent<SegmentGizmo>();
-            gizmo.point1 = points[0];
-            gizmo.point2 = points[1];
-        }
+        var gizmo = newSegment.GetComponent<SegmentGizmo>();
+        gizmo.point1 = points[0];
+        gizmo.point2 = points[1];
     }
 }
