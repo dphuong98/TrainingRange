@@ -11,7 +11,6 @@ namespace Math2D
 
         protected override void OnDrawGizmos()
         {
-            //TODO Error warning in editor
             if (!IsValid())
             {
                 if (gameObject.IsPrefab()) return;

@@ -22,12 +22,9 @@ namespace Math2D
                     continue;
             
                 var cameraPosition = SceneView.lastActiveSceneView.camera.transform.position;
-                var newPoint = Instantiate(pointPrefab, cameraPosition, Quaternion.identity, transform);
+                var pointPosition = new Vector3(cameraPosition.x, cameraPosition.y, 0);
+                var newPoint = Instantiate(pointPrefab, pointPosition, Quaternion.identity, transform);
                 newPoint.name = c.ToString();
-            
-                //TODO remove hard code
-                Selection.activeTransform = newPoint.transform;
-                SceneView.lastActiveSceneView.FrameSelected();
                 break;
             }
         }

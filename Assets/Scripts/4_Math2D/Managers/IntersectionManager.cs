@@ -10,8 +10,6 @@ namespace Math2D
 {
     public class IntersectionManager : MonoBehaviour
     {
-        public bool showIntersection;
-
         public Transform segments;
         public Transform lines;
     
@@ -20,8 +18,6 @@ namespace Math2D
 
         private void OnDrawGizmos()
         {
-            if (!showIntersection) return;
-
             var intersection = new Point();
 
             var lineGroup = segments.Cast<Transform>().Concat(lines.Cast<Transform>()).ToArray();
