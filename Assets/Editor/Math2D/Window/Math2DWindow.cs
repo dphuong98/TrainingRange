@@ -10,7 +10,7 @@ public class Math2DWindow : EditorWindow
 {
     private bool isFloating;
     private float windowMinWidth = 200;
-    private float windowMinHeight = 220;
+    private float windowMinHeight = 270;
     private float buttonWidth = 50f;
     private float buttonHeight = 50f;
 
@@ -95,6 +95,20 @@ public class Math2DWindow : EditorWindow
                 lines.SpawnLine(points[0], points[1]);
         }
         
+        if (GUILayout.Button(Resources.Load<Texture>("Icons/Intersect"), GUILayout.Width(buttonWidth),
+            GUILayout.Height(buttonHeight)))
+        {
+            var lines = getSelectedGameObjects(2);
+            if (lines != null)
+            {
+                var line1 = lines[0].transform.GetLine();
+                var line2 = lines[1].transform.GetLine();
+                
+                if (line1 != null && line2 != null)
+                    points.SpawnIntersection(lines[0].transform, lines[1].transform);
+            }
+        }
+        
         if (GUILayout.Button(Resources.Load<Texture>("Icons/Projection"), GUILayout.Width(buttonWidth),
             GUILayout.Height(buttonHeight)))
         {
@@ -125,8 +139,7 @@ public class Math2DWindow : EditorWindow
         
         GUILayout.BeginVertical();
         GUILayout.Label("Intersections", EditorStyles.boldLabel);
-        IntersectionManager.ShowIntersection = GUILayout.Toggle(IntersectionManager.ShowIntersection,"ShowIntersection");
-        IntersectionManager.ShowCoordinate = GUILayout.Toggle(IntersectionManager.ShowCoordinate,"ShowCoordinate");
+        IntersectionGizmo.ShowCoordinate = GUILayout.Toggle(IntersectionGizmo.ShowCoordinate,"ShowCoordinate");
         GUILayout.EndVertical();
         
         GUILayout.EndHorizontal();

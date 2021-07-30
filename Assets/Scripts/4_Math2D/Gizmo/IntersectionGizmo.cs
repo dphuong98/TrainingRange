@@ -7,6 +7,8 @@ namespace Math2D
 {
     public class IntersectionGizmo: ConditionalPointGizmo
     {
+        public static bool ShowCoordinate;
+        
         public Transform line1;
         public Transform line2;
     
@@ -14,15 +16,13 @@ namespace Math2D
         {
             if (line1 == null || line2 == null)
                 return false;
-            
-            if (!IntersectionManager.ShowIntersection) return false;
-            
+
             var intersectionPoint = new Point();
             var equation1 = line1.GetLine();
             var equation2 = line2.GetLine();
             if (!equation1.Intersect(equation2, ref intersectionPoint)) return false;
             
-            HideCoord = !IntersectionManager.ShowCoordinate;
+            HideCoord = !ShowCoordinate;
 
             transform.position = new Vector3(intersectionPoint.x, intersectionPoint.y, 0);
             return true;
