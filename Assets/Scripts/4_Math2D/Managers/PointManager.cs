@@ -6,13 +6,13 @@ using UnityEngine;
 
 namespace Math2D
 {
-    public class PointManager : MonoBehaviour
+    public class PointManager : Singleton<PointManager>
     {
         [SerializeField] private GameObject pointPrefab;
         [SerializeField] private GameObject intersectionPrefab;
         [SerializeField] private GameObject projectionPrefab;
 
-        public GameObject SpawnPoint()
+        public Transform SpawnPoint()
         {
             //TODO naming method after "Z"
             foreach (var c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
@@ -26,23 +26,23 @@ namespace Math2D
                 var newPoint = Instantiate(pointPrefab, pointPosition, Quaternion.identity, transform);
                 newPoint.name = c.ToString();
 
-                return newPoint;
+                return newPoint.transform;
             }
 
             return null;
         }
     
-        public GameObject SpawnPoint(string name, Point position)
+        public Transform SpawnPoint(string name, Point position)
         {
             if (Exist(name)) return null;
         
             var newPoint = Instantiate(pointPrefab, new Vector3(position.x, position.y, 0), Quaternion.identity, transform);
             newPoint.name = name;
             
-            return newPoint;
+            return newPoint.transform;
         }
     
-        public GameObject SpawnIntersection(Transform line1, Transform line2)
+        public Transform SpawnIntersection(Transform line1, Transform line2)
         {
             if (line1 == null || line2 == null) return null;
 
@@ -56,10 +56,10 @@ namespace Math2D
             gizmo.line1 = line1;
             gizmo.line2 = line2;
 
-            return newIntersection;
+            return newIntersection.transform;
         }
 
-        public GameObject SpawnProjection(Transform point, Transform line)
+        public Transform SpawnProjection(Transform point, Transform line)
         {
             if (point == null || line == null) return null;
             
@@ -73,7 +73,7 @@ namespace Math2D
             gizmo.point = point;
             gizmo.line = line;
             
-            return newProjection;
+            return newProjection.transform;
         }
 
         public Transform GetPoint(string name)

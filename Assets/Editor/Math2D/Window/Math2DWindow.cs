@@ -10,7 +10,7 @@ public class Math2DWindow : EditorWindow
 {
     private bool isFloating;
     private float windowMinWidth = 200;
-    private float windowMinHeight = 270;
+    private float windowMinHeight = 320;
     private float buttonWidth = 50f;
     private float buttonHeight = 50f;
 
@@ -19,6 +19,7 @@ public class Math2DWindow : EditorWindow
     private PointManager points;
     private SegmentManager segments;
     private LineManager lines;
+    private ShapeManager shapes;
 
     [MenuItem("Custom/Math2D")]
     private static void ShowWindow()
@@ -37,9 +38,10 @@ public class Math2DWindow : EditorWindow
             math2D.name = "Math2D";
         }
         
-        points = math2D.transform.Find("Points").GetComponent<PointManager>();
-        segments = math2D.transform.Find("Segments").GetComponent<SegmentManager>();
-        lines = math2D.transform.Find("Lines").GetComponent<LineManager>();
+        points = PointManager.Instance;
+        segments = SegmentManager.Instance;
+        lines = LineManager.Instance;
+        shapes = ShapeManager.Instance;
     }
 
     private void SetIsUtilityWindow(bool isUtilityWindow)
@@ -95,20 +97,6 @@ public class Math2DWindow : EditorWindow
                 lines.SpawnLine(points[0], points[1]);
         }
         
-        if (GUILayout.Button(Resources.Load<Texture>("Icons/Intersect"), GUILayout.Width(buttonWidth),
-            GUILayout.Height(buttonHeight)))
-        {
-            var lines = getSelectedGameObjects(2);
-            if (lines != null)
-            {
-                var line1 = lines[0].transform.GetLine();
-                var line2 = lines[1].transform.GetLine();
-                
-                if (line1 != null && line2 != null)
-                    points.SpawnIntersection(lines[0].transform, lines[1].transform);
-            }
-        }
-        
         if (GUILayout.Button(Resources.Load<Texture>("Icons/Projection"), GUILayout.Width(buttonWidth),
             GUILayout.Height(buttonHeight)))
         {
@@ -116,13 +104,13 @@ public class Math2DWindow : EditorWindow
             if (elements != null)
             {
                 //TODO Refactor
-                var element1 = elements[0].transform.GetLine();
-                var element2 = elements[1].transform.GetLine();
+                var element1 = elements[0].GetLine();
+                var element2 = elements[1].GetLine();
 
                 if (element1 == null && element2 != null)
                 {
                     //Element 1 is a point and element 2 is a line/segment
-                    var projection = points.SpawnProjection(elements[0].transform, elements[1].transform);
+                    var projection = points.SpawnProjection(elements[0], elements[1]);
                     segments.SpawnSegment(projection, elements[0]);
                 }
                 
@@ -132,6 +120,30 @@ public class Math2DWindow : EditorWindow
                     var projection = points.SpawnProjection(elements[1].transform, elements[0].transform);
                     segments.SpawnSegment(projection, elements[1]);
                 }
+            }
+        }
+        
+        if (GUILayout.Button(Resources.Load<Texture>("Icons/Intersect"), GUILayout.Width(buttonWidth),
+            GUILayout.Height(buttonHeight)))
+        {
+            var lines = getSelectedGameObjects(2);
+            if (lines != null)
+            {
+                var line1 = lines[0].GetLine();
+                var line2 = lines[1].GetLine();
+                
+                if (line1 != null && line2 != null)
+                    points.SpawnIntersection(lines[0].transform, lines[1].transform);
+            }
+        }
+        
+        if (GUILayout.Button(Resources.Load<Texture>("Icons/Polygon"), GUILayout.Width(buttonWidth),
+            GUILayout.Height(buttonHeight)))
+        {
+            var vertices = getMinSelectedGameObjects(3);
+            if (vertices != null)
+            {
+                shapes.SpawnPolygon(vertices);
             }
         }
 
@@ -144,10 +156,16 @@ public class Math2DWindow : EditorWindow
         
         GUILayout.EndHorizontal();
     }
-
-    private GameObject[] getSelectedGameObjects(int count)
+    
+    private Transform[] getSelectedGameObjects(int count)
     {
         if (Selection.objects.Length != count) return null;
-        return Selection.objects.Take(count).Select(s => (GameObject)s).ToArray();
+        return Selection.objects.Take(count).Select(s => ((GameObject)s).transform).ToArray();
+    }
+
+    private Transform[] getMinSelectedGameObjects(int min)
+    {
+        if (Selection.objects.Length < min) return null;
+        return Selection.objects.Select(s => ((GameObject)s).transform).ToArray();;
     }
 }

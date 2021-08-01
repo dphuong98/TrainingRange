@@ -8,23 +8,22 @@ namespace Math2D
 {
     public class SegmentGizmo : MonoBehaviour
     {
-        public GameObject point1;
-        public GameObject point2;
+        public Transform point1;
+        public Transform point2;
+        
         public Color segmentColor  = Color.green;
         public Vector3 TextSpacing = Vector3.right * 0.15f;
 
         private void OnDrawGizmos()
         {
-            if (point1 == null || point2 == null)
+            if ((point1 == null || point2 == null) && !gameObject.IsPrefab())
             {
-                if (gameObject.IsPrefab()) return;
-            
                 DestroyImmediate(gameObject);
                 return;
             }
         
-            var start = point1.transform.position;
-            var end = point2.transform.position;
+            var start = point1.position;
+            var end = point2.position;
 
             Gizmos.color = segmentColor;
             Gizmos.DrawLine(start, end);
@@ -38,8 +37,8 @@ namespace Math2D
 
         public LineSegment GetLineSegment()
         {
-            var start = point1.transform.position;
-            var end = point2.transform.position;
+            var start = point1.position;
+            var end = point2.position;
         
             return new LineSegment(new Point(start.x, start.y), new Point(end.x, end.y));
         }

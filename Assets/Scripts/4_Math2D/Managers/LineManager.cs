@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace Math2D
 {
-    public class LineManager : MonoBehaviour
+    public class LineManager : Singleton<LineManager>
     {
         [SerializeField] private GameObject linePrefab;
     
-        public GameObject SpawnLine(GameObject point1, GameObject point2)
+        public Transform SpawnLine(Transform point1, Transform point2)
         {
             var newLineName = (point1.name + point2.name).Sort();
             if (Exist(newLineName)) return null;
@@ -20,7 +20,7 @@ namespace Math2D
             gizmo.point1 = point1;
             gizmo.point2 = point2;
 
-            return newLine;
+            return newLine.transform;
         }
         
         public Transform GetLine(string name)
