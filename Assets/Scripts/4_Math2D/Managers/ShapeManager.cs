@@ -18,9 +18,9 @@ public class ShapeManager : Singleton<ShapeManager>
         newPolygon.name = polygonName;
 
         var gizmo = newPolygon.GetComponent<PolygonGizmo>();
-        gizmo.Vertices = vertices;
+        gizmo.SetVertices(vertices);
 
-        return null;
+        return newPolygon.transform;
     }
 
     public bool Exist(string name)

@@ -12,7 +12,7 @@ namespace Math2D
 
         public Polygon(List<Point> vertices)
         {
-            if (vertices.Count() < 3)
+            if (vertices.Count < 3)
                 throw new ArgumentException("A polygon must have at least 3 points");
             this.vertices = vertices;
         }
@@ -35,7 +35,18 @@ namespace Math2D
 
         public float Area()
         {
-            throw new System.NotImplementedException();
+            // Initialize area
+            var area = 0f;
+            var n = vertices.Count;
+            int i, j;
+            
+            // Calculate value of shoelace formula
+            for (i = 0, j = n - 1; i < n; j = i++) {
+                area += (vertices[j].x + vertices[i].x) * (vertices[j].y - vertices[i].y);
+            }
+ 
+            // Return absolute value
+            return Math.Abs(area / 2f);
         }
 
         public bool Intersect(Line line, ref List<Point> intersections)

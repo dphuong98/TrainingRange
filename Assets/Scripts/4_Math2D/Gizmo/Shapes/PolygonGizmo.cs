@@ -3,27 +3,26 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Math2D;
+using UnityEditor;
 using UnityEngine;
 
 public class PolygonGizmo : MonoBehaviour
 {
     [SerializeField]
     private Transform[] vertices;
+    private Polygon polygon;
     
     public Color polygonColor = Color.yellow;
     public Color brokenPolygonColor = Color.red;
-    
-    public Transform[] Vertices
-    {
-        get => vertices;
-        set
-        {
-            if (value.Length < 3)
-                return;
-            vertices = value;
 
-            DrawSegmentBetweenPoints();
-        }
+    public void SetVertices(Transform[] vertices)
+    {
+        if (vertices.Length < 3)
+            return;
+        
+        this.vertices = vertices;
+        polygon = new Polygon(vertices.Select(v => new Point(v.position.x, v.position.y)).ToList());
+        DrawSegmentBetweenPoints();
     }
 
     private void OnDrawGizmos()
@@ -50,11 +49,17 @@ public class PolygonGizmo : MonoBehaviour
             DestroyProtocol();
             return;
         }
+        
+        if (Selection.activeTransform == transform)
+        {
+            var text = "Area: " + polygon.Area();
+            Handles.Label(vertices[0].position + new Vector3(-0.5f, -0.5f), text, EditorStyles.boldLabel);
+        }
     }
 
     public Polygon GetPolygon()
     {
-        return new Polygon(vertices.Select(v => new Point(v.position.x, v.position.y)).ToList());
+        return polygon;
     }
 
     private void DrawSegmentBetweenPoints()

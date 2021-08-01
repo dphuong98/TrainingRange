@@ -12,6 +12,12 @@ namespace Math2D
 
         private void OnDrawGizmos()
         {
+            if (shape == null)
+            {
+                DestroyImmediate(this);
+                return;
+            }
+            
             var shapeData = shape.GetShape();
             if (!shapeData.Contains(new Point(transform.position.x, transform.position.y))) return;
             
