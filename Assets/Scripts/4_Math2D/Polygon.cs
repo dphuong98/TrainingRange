@@ -8,13 +8,13 @@ namespace Math2D
 {
     public struct Polygon : IShape
     {
-        private List<Point> vertices;
+        private readonly List<Point> vertices;
 
         public Polygon(List<Point> vertices)
         {
             if (vertices.Count < 3)
                 throw new ArgumentException("A polygon must have at least 3 points");
-            this.vertices = vertices;
+            this.vertices = new List<Point>(vertices);
         }
 
         public bool Contains(Point p)
@@ -35,6 +35,8 @@ namespace Math2D
 
         public float Area()
         {
+            //Shoelace formula may not account for polygon with crossing segments
+            
             // Initialize area
             var area = 0f;
             var n = vertices.Count;
