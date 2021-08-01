@@ -8,18 +8,29 @@ namespace Math2D
 {
     public struct Polygon : IShape
     {
-        private List<Point> points;
+        private List<Point> vertices;
 
-        public Polygon(List<Point> points)
+        public Polygon(List<Point> vertices)
         {
-            if (points.Count() < 3)
+            if (vertices.Count() < 3)
                 throw new ArgumentException("A polygon must have at least 3 points");
-            this.points = points;
+            this.vertices = vertices;
         }
 
         public bool Contains(Point p)
         {
-            throw new System.NotImplementedException();
+            var isInside = false;
+            int i, j;
+            for (i = 0, j = vertices.Count - 1; i < vertices.Count; j = i++)
+            {
+                var pi = vertices[i];
+                var pj = vertices[j];
+                if (((pi.y <= p.y && p.y < pj.y) || (pj.y <= p.y && p.y < pi.y)) &&
+                    (p.x < (pj.x - pi.x) * (p.y - pi.y) / (pj.y - pi.y) + pi.x))
+                    isInside = !isInside;
+            }
+
+            return isInside;
         }
 
         public float Area()

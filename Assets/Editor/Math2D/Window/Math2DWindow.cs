@@ -5,11 +5,12 @@ using System.Linq;
 using Math2D;
 using TreeEditor;
 using UnityEngine.UIElements;
+using PointerType = UnityEngine.PointerType;
 
 public class Math2DWindow : EditorWindow
 {
     private bool isFloating;
-    private float windowMinWidth = 200;
+    private float windowMinWidth = 130;
     private float windowMinHeight = 320;
     private float buttonWidth = 50f;
     private float buttonHeight = 50f;
@@ -38,6 +39,7 @@ public class Math2DWindow : EditorWindow
             math2D.name = "Math2D";
         }
         
+        //TODO spawn folder gameobject if not found
         points = PointManager.Instance;
         segments = SegmentManager.Instance;
         lines = LineManager.Instance;
@@ -70,14 +72,13 @@ public class Math2DWindow : EditorWindow
                 ShowGenericMenu();
                 break;
         }
-        
+
         GUILayout.BeginHorizontal();
         GUILayout.Space(5f);
         GUILayout.BeginVertical();
         if (GUILayout.Button(Resources.Load<Texture>("Icons/Point"), GUILayout.Width(buttonWidth),
             GUILayout.Height(buttonHeight)))
         {
-            //TODO spawn folder if not found
             points.SpawnPoint();
         }
 
@@ -85,7 +86,7 @@ public class Math2DWindow : EditorWindow
             GUILayout.Height(buttonHeight)))
         {
             var points = getSelectedGameObjects(2);
-            if (points != null)
+            if (points != null && points[0].IsPoint() && points[1].IsPoint())
                 segments.SpawnSegment(points[0], points[1]);
         }
 
@@ -93,31 +94,26 @@ public class Math2DWindow : EditorWindow
             GUILayout.Height(buttonHeight)))
         {
             var points = getSelectedGameObjects(2);
-            if (points != null)
+            if (points != null && points[0].IsPoint() && points[1].IsPoint())
                 lines.SpawnLine(points[0], points[1]);
         }
         
         if (GUILayout.Button(Resources.Load<Texture>("Icons/Projection"), GUILayout.Width(buttonWidth),
             GUILayout.Height(buttonHeight)))
         {
+            //TODO Probably refactor these
             var elements = getSelectedGameObjects(2);
             if (elements != null)
             {
-                //TODO Refactor
-                var element1 = elements[0].GetLine();
-                var element2 = elements[1].GetLine();
-
-                if (element1 == null && element2 != null)
+                if (elements[0].IsPoint() && elements[1].IsLine())
                 {
-                    //Element 1 is a point and element 2 is a line/segment
                     var projection = points.SpawnProjection(elements[0], elements[1]);
                     segments.SpawnSegment(projection, elements[0]);
                 }
                 
-                if (element2 == null && element1 != null)
+                if (elements[0].IsLine() && elements[1].IsPoint())
                 {
-                    //Element 2 is a point and element 1 is a line/segment
-                    var projection = points.SpawnProjection(elements[1].transform, elements[0].transform);
+                    var projection = points.SpawnProjection(elements[1], elements[0]);
                     segments.SpawnSegment(projection, elements[1]);
                 }
             }
@@ -129,14 +125,13 @@ public class Math2DWindow : EditorWindow
             var lines = getSelectedGameObjects(2);
             if (lines != null)
             {
-                var line1 = lines[0].GetLine();
-                var line2 = lines[1].GetLine();
-                
-                if (line1 != null && line2 != null)
-                    points.SpawnIntersection(lines[0].transform, lines[1].transform);
+                if (lines[0].IsLine() && lines[1].IsLine())
+                    points.SpawnIntersection(lines[0], lines[1]);
             }
         }
+        GUILayout.EndVertical();
         
+        GUILayout.BeginVertical();
         if (GUILayout.Button(Resources.Load<Texture>("Icons/Polygon"), GUILayout.Width(buttonWidth),
             GUILayout.Height(buttonHeight)))
         {
@@ -146,14 +141,37 @@ public class Math2DWindow : EditorWindow
                 shapes.SpawnPolygon(vertices);
             }
         }
-
-        GUILayout.EndVertical();
         
+        if (GUILayout.Button(Resources.Load<Texture>("Icons/Contain"), GUILayout.Width(buttonWidth),
+            GUILayout.Height(buttonHeight)))
+        {
+            var elements = getSelectedGameObjects(2);
+            if (elements != null)
+            {
+                if (elements[0].IsPoint() && elements[1].IsShape())
+                {
+                    points.AddPointProximityChecker(elements[0], elements[1]);
+                }
+                
+                if (elements[0].IsShape() && elements[1].IsPoint())
+                {
+                    points.AddPointProximityChecker(elements[1], elements[0]);
+                }
+            }
+        }
+        GUILayout.EndVertical();
+        GUILayout.EndHorizontal();
+        
+        GUILayout.BeginHorizontal();
+        GUILayout.Space(10f);
+        GUILayout.BeginVertical();
+
         GUILayout.BeginVertical();
         GUILayout.Label("Intersections", EditorStyles.boldLabel);
         IntersectionGizmo.ShowCoordinate = GUILayout.Toggle(IntersectionGizmo.ShowCoordinate,"ShowCoordinate");
         GUILayout.EndVertical();
         
+        GUILayout.EndVertical();
         GUILayout.EndHorizontal();
     }
     

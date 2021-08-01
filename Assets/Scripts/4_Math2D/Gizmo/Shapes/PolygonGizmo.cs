@@ -52,6 +52,11 @@ public class PolygonGizmo : MonoBehaviour
         }
     }
 
+    public Polygon GetPolygon()
+    {
+        return new Polygon(vertices.Select(v => new Point(v.position.x, v.position.y)).ToList());
+    }
+
     private void DrawSegmentBetweenPoints()
     {
         var segments = SegmentManager.Instance;

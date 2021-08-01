@@ -75,6 +75,11 @@ namespace Math2D
             
             return newProjection.transform;
         }
+        
+        public void AddPointProximityChecker(Transform point, Transform shape)
+        {
+            point.gameObject.AddComponent<ProximityCheckerGizmo>().shape = shape;
+        }
 
         public Transform GetPoint(string name)
         {

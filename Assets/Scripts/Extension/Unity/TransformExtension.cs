@@ -23,20 +23,37 @@ namespace Math2D
 
             return null;
         }
+        
+        public static IShape GetShape(this Transform transform)
+        {
+            var polygon = transform.GetComponent<PolygonGizmo>();
+            if (polygon != null)
+            {
+                return polygon.GetPolygon();
+            }
+            
+            var rectangle = transform.GetComponent<RectangleGizmo>();
+            if (rectangle != null)
+            {
+                //return rectangle.GetLineSegment();
+            }
 
-        public static bool IsSegment(this Transform segmentTransform)
+            return null;
+        }
+
+        public static bool IsPoint(this Transform transform)
         {
-            return segmentTransform.GetComponent<SegmentGizmo>() != null;
+            return transform.GetComponent<PointGizmo>() != null || transform.GetComponent<IntersectionGizmo>() != null || transform.GetComponent<ProjectionGizmo>() != null;
         }
         
-        public static bool IsLine(this Transform lineTransform)
+        public static bool IsLine(this Transform transform)
         {
-            return lineTransform.GetComponent<LineGizmo>() != null;
+            return transform.GetComponent<SegmentGizmo>() != null || transform.GetComponent<LineGizmo>() != null;
         }
-        
-        public static bool IsPoint(this Transform pointTransform)
+
+        public static bool IsShape(this Transform transform)
         {
-            return pointTransform.GetComponent<PointGizmo>() != null;
+            return transform.GetComponent<PolygonGizmo>() != null || transform.GetComponent<RectangleGizmo>() != null;
         }
     }
 }
