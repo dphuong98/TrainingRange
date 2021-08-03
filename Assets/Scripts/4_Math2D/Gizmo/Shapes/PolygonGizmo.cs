@@ -9,7 +9,7 @@ using UnityEngine;
 public class PolygonGizmo : MonoBehaviour, IShapeGizmo
 {
     [SerializeField]
-    private Transform[] vertices;
+    protected Transform[] vertices;
 
     public Color polygonColor = Color.yellow;
     public Color brokenPolygonColor = Color.red;
@@ -61,13 +61,15 @@ public class PolygonGizmo : MonoBehaviour, IShapeGizmo
         return new Polygon(vertices.Select(v => new Point(v.position.x, v.position.y)).ToArray());;
     }
 
-    public Transform[] GetSegments()
+    public List<Transform> GetSegments()
     {
         var segments = SegmentManager.Instance;
-        return vertices.Zip(vertices.Skip(1), (a, b) => segments.GetSegment(a, b)).ToArray();
+        var segmentList = vertices.Zip(vertices.Skip(1), (a, b) => segments.GetSegment(a, b)).ToList();
+        segmentList.Add(segments.GetSegment(vertices.Last(), vertices.First()));
+        return segmentList;
     }
 
-    private void DrawSegmentBetweenPoints()
+    protected void DrawSegmentBetweenPoints()
     {
         var segments = SegmentManager.Instance;
         
@@ -110,5 +112,5 @@ public class PolygonGizmo : MonoBehaviour, IShapeGizmo
 
 public interface IShapeGizmo
 {
-    Transform[] GetSegments();
+    List<Transform> GetSegments();
 }

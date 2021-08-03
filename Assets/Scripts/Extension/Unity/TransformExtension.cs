@@ -35,7 +35,7 @@ namespace Math2D
             var rectangle = transform.GetComponent<RectangleGizmo>();
             if (rectangle != null)
             {
-                //return rectangle.GetLineSegment();
+                return rectangle.GetRectangle();
             }
 
             return null;
@@ -52,7 +52,7 @@ namespace Math2D
             var rectangle = transform.GetComponent<RectangleGizmo>();
             if (rectangle != null)
             {
-                //return rectangle.GetLineSegment();
+                return rectangle;
             }
 
             return null;

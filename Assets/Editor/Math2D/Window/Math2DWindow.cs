@@ -172,6 +172,15 @@ public class Math2DWindow : EditorWindow
                 GUILayout.Height(buttonHeight)))
                     shapes.SpawnPolygon(vertices);
         }
+        
+        {
+            GUI.enabled = true;
+            var polygonContent =
+                new GUIContent(Resources.Load<Texture>("Icons/Rectangle"), "Create a rectangle");
+            if (GUILayout.Button(polygonContent, GUILayout.Width(buttonWidth),
+                GUILayout.Height(buttonHeight)))
+                    shapes.SpawnRectangle();
+        }
 
         {
             var elements = getSelectedGameObjects(2);
