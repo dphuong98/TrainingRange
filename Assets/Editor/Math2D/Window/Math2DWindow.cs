@@ -30,6 +30,7 @@ public class Math2DWindow : EditorWindow
     
     private void Awake()
     {
+        
         minSize = new Vector2(windowMinWidth, windowMinHeight);
         
         math2D = GameObject.Find("Math2D");
@@ -65,6 +66,7 @@ public class Math2DWindow : EditorWindow
 
     private void OnGUI()
     {
+        //TODO Window only update when hovered over
         var e = Event.current;
         switch (e.type)
         {
@@ -76,49 +78,51 @@ public class Math2DWindow : EditorWindow
         GUILayout.BeginHorizontal();
         GUILayout.Space(5f);
         GUILayout.BeginVertical();
-        var buttonContent =
-            new GUIContent(Resources.Load<Texture>("Icons/Point"), "Spawn a new point at the center of scene view");
-        if (GUILayout.Button(buttonContent, GUILayout.Width(buttonWidth),
-            GUILayout.Height(buttonHeight)))
+
         {
-            points.SpawnPoint();
+            GUI.enabled = true;
+            var buttonContent =
+                new GUIContent(Resources.Load<Texture>("Icons/Point"), "Spawn a new point at the center of scene view");
+            if (GUILayout.Button(buttonContent, GUILayout.Width(buttonWidth), GUILayout.Height(buttonHeight)))
+                    points.SpawnPoint();
         }
 
-        var segmentContent =
-            new GUIContent(Resources.Load<Texture>("Icons/Segment"), "Create a segment between 2 points selected in scene view");
-        if (GUILayout.Button(segmentContent, GUILayout.Width(buttonWidth),
-            GUILayout.Height(buttonHeight)))
         {
-            var points = getSelectedGameObjects(2);
-            if (points != null && points[0].IsPoint() && points[1].IsPoint())
-                segments.SpawnSegment(points[0], points[1]);
-        }
-
-        var lineContent =
-            new GUIContent(Resources.Load<Texture>("Icons/Line"), "Create a line between 2 points selected in scene view");
-        if (GUILayout.Button(lineContent, GUILayout.Width(buttonWidth),
-            GUILayout.Height(buttonHeight)))
-        {
-            var points = getSelectedGameObjects(2);
-            if (points != null && points[0].IsPoint() && points[1].IsPoint())
-                lines.SpawnLine(points[0], points[1]);
-        }
-
-        var projectionContent =
-            new GUIContent(Resources.Load<Texture>("Icons/Projection"), "Create a projection between a point and a line/segment selected in scene view");
-        if (GUILayout.Button(projectionContent, GUILayout.Width(buttonWidth),
-            GUILayout.Height(buttonHeight)))
-        {
-            //TODO Probably refactor these
             var elements = getSelectedGameObjects(2);
-            if (elements != null)
+            GUI.enabled = elements != null && elements[0].IsPoint() && elements[1].IsPoint();
+            var segmentContent =
+                new GUIContent(Resources.Load<Texture>("Icons/Segment"), "Create a segment between 2 points selected in scene view");
+            if (GUILayout.Button(segmentContent, GUILayout.Width(buttonWidth), GUILayout.Height(buttonHeight)))
+                    segments.SpawnSegment(elements[0], elements[1]);
+            }
+
+        {
+            var elements = getSelectedGameObjects(2);
+            GUI.enabled = elements != null && elements[0].IsPoint() && elements[1].IsPoint();
+            var lineContent =
+                new GUIContent(Resources.Load<Texture>("Icons/Line"), "Create a line between 2 points selected in scene view");
+            if (GUILayout.Button(lineContent, GUILayout.Width(buttonWidth),
+                GUILayout.Height(buttonHeight)))
+                    lines.SpawnLine(elements[0], elements[1]);
+        }
+
+        {
+            var elements = getSelectedGameObjects(2);
+            GUI.enabled = elements != null
+                          && ((elements[0].IsPoint() && elements[1].IsLine()) 
+                              || (elements[0].IsLine() && elements[1].IsPoint()));
+            var projectionContent =
+                new GUIContent(Resources.Load<Texture>("Icons/Projection"), "Create a projection between a point and a line/segment selected in scene view");
+            if (GUILayout.Button(projectionContent, GUILayout.Width(buttonWidth),
+                GUILayout.Height(buttonHeight)))
             {
+                //TODO Probably refactor these
                 if (elements[0].IsPoint() && elements[1].IsLine())
                 {
                     var projection = points.SpawnProjection(elements[0], elements[1]);
                     segments.SpawnSegment(projection, elements[0]);
                 }
-                
+            
                 if (elements[0].IsLine() && elements[1].IsPoint())
                 {
                     var projection = points.SpawnProjection(elements[1], elements[0]);
@@ -127,13 +131,16 @@ public class Math2DWindow : EditorWindow
             }
         }
 
-        var intersectContent =
-            new GUIContent(Resources.Load<Texture>("Icons/Intersect"), "Create an intersection between 2 lines or a line and a shape selected in scene view");
-        if (GUILayout.Button(intersectContent, GUILayout.Width(buttonWidth),
-            GUILayout.Height(buttonHeight)))
         {
             var elements = getSelectedGameObjects(2);
-            if (elements != null)
+            GUI.enabled = elements != null
+                          && ((elements[0].IsLine() && elements[1].IsLine())
+                              || (elements[0].IsLine() && elements[1].IsShape())
+                              || (elements[0].IsShape() && elements[1].IsLine()));
+            var intersectContent =
+                new GUIContent(Resources.Load<Texture>("Icons/Intersect"), "Create an intersection between 2 lines or a line and a shape selected in scene view");
+            if (GUILayout.Button(intersectContent, GUILayout.Width(buttonWidth),
+                GUILayout.Height(buttonHeight)))
             {
                 if (elements[0].IsLine() && elements[1].IsLine())
                     points.SpawnIntersection(elements[0], elements[1]);
@@ -142,7 +149,7 @@ public class Math2DWindow : EditorWindow
                 {
                     points.SpawnGroupIntersection(elements[0], elements[1]);
                 }
-                
+            
                 if (elements[0].IsShape() && elements[1].IsLine())
                 {
                     points.SpawnGroupIntersection(elements[1], elements[0]);
@@ -152,31 +159,31 @@ public class Math2DWindow : EditorWindow
         GUILayout.EndVertical();
         
         GUILayout.BeginVertical();
-        var polygonContent =
-            new GUIContent(Resources.Load<Texture>("Icons/Polygon"), "Define a polygon from selected points in scene view");
-        if (GUILayout.Button(polygonContent, GUILayout.Width(buttonWidth),
-            GUILayout.Height(buttonHeight)))
         {
             var vertices = getMinSelectedGameObjects(3);
-            if (vertices != null)
-            {
-                shapes.SpawnPolygon(vertices);
-            }
+            GUI.enabled = vertices != null;
+            var polygonContent =
+                new GUIContent(Resources.Load<Texture>("Icons/Polygon"), "Define a polygon from selected points in scene view");
+            if (GUILayout.Button(polygonContent, GUILayout.Width(buttonWidth),
+                GUILayout.Height(buttonHeight)))
+                    shapes.SpawnPolygon(vertices);
         }
 
-        var containContent =
-            new GUIContent(Resources.Load<Texture>("Icons/Contain"), "Make a point aware of its position relative to a shape");
-        if (GUILayout.Button(containContent, GUILayout.Width(buttonWidth),
-            GUILayout.Height(buttonHeight)))
         {
             var elements = getSelectedGameObjects(2);
-            if (elements != null)
+            GUI.enabled = elements != null
+                && ((elements[0].IsPoint() && elements[1].IsShape())
+                    ||(elements[0].IsShape() && elements[1].IsPoint()));
+            var containContent =
+                new GUIContent(Resources.Load<Texture>("Icons/Contain"), "Make a point aware of its position relative to a shape");
+            if (GUILayout.Button(containContent, GUILayout.Width(buttonWidth),
+                GUILayout.Height(buttonHeight)))
             {
                 if (elements[0].IsPoint() && elements[1].IsShape())
                 {
                     points.AddPointProximityChecker(elements[0], elements[1]);
                 }
-                
+            
                 if (elements[0].IsShape() && elements[1].IsPoint())
                 {
                     points.AddPointProximityChecker(elements[1], elements[0]);
@@ -191,6 +198,7 @@ public class Math2DWindow : EditorWindow
         GUILayout.BeginVertical();
 
         GUILayout.BeginVertical();
+        GUI.enabled = true;
         GUILayout.Label("Intersections", EditorStyles.boldLabel);
         IntersectionGizmo.ShowCoordinate = GUILayout.Toggle(IntersectionGizmo.ShowCoordinate, new GUIContent("ShowCoordinate", "Show the coordinate of intersection points without needing to selecting them in scene view"));
         GUILayout.EndVertical();
