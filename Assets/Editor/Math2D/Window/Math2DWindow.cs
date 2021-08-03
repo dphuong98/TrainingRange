@@ -30,7 +30,6 @@ public class Math2DWindow : EditorWindow
     
     private void Awake()
     {
-        
         minSize = new Vector2(windowMinWidth, windowMinHeight);
         
         math2D = GameObject.Find("Math2D");
@@ -62,6 +61,11 @@ public class Math2DWindow : EditorWindow
         menu.AddItem(new GUIContent("Window/Open as Floating Window", ""), isFloating, () => SetIsUtilityWindow(true));
         menu.AddItem(new GUIContent("Window/Open as Dockable Window", ""), !isFloating, () => SetIsUtilityWindow(false));
         menu.ShowAsContext();
+    }
+    
+    void OnInspectorUpdate()
+    {
+        Repaint();
     }
 
     private void OnGUI()
