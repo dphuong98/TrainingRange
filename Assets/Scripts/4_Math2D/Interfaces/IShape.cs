@@ -8,8 +8,7 @@ namespace Math2D
     {
         bool Contains(Point p);
         float Area();
-        bool Intersect(Line line, ref List<Point> intersections);
-        bool Intersect(LineSegment line, ref List<Point> intersections);
+        bool Intersect(ILine line, ref List<Point> intersections);
         Rectangle AABB();
     }
 }

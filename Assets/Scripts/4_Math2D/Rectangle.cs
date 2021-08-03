@@ -4,15 +4,15 @@ using UnityEngine;
 
 namespace Math2D
 {
-    public class Rectangle : IShape
+    public struct Rectangle : IShape
     {
-        private Point topLeft;
+        private Point topRight;
         private float width;
         private float height;
 
-        public Rectangle(Point topLeft, float width, float height)
+        public Rectangle(Point topRight, float width, float height)
         {
-            this.topLeft = topLeft;
+            this.topRight = topRight;
             this.width = width;
             this.height = height;
         }
@@ -27,15 +27,11 @@ namespace Math2D
             throw new System.NotImplementedException();
         }
 
-        public bool Intersect(Line line, ref List<Point> intersections)
+        public bool Intersect(ILine line, ref List<Point> intersections)
         {
             throw new System.NotImplementedException();
         }
 
-        public bool Intersect(LineSegment line, ref List<Point> intersections)
-        {
-            throw new System.NotImplementedException();
-        }
 
         public Rectangle AABB()
         {

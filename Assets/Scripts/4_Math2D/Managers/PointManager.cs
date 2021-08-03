@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,6 +12,7 @@ namespace Math2D
     {
         [SerializeField] private GameObject pointPrefab;
         [SerializeField] private GameObject intersectionPrefab;
+        [SerializeField] private GameObject groupIntersectionPrefab;
         [SerializeField] private GameObject projectionPrefab;
 
         public Transform SpawnPoint()
@@ -57,6 +60,23 @@ namespace Math2D
             gizmo.line2 = line2;
 
             return newIntersection.transform;
+        }
+        
+        public Transform SpawnGroupIntersection(Transform line, Transform shape)
+        {
+            if (line == null || shape == null) return null;
+            
+            var groupName = line.name + " x " + shape.name;
+            if (Exist(groupName)) return null;
+            
+            var newGroup = Instantiate(groupIntersectionPrefab, transform);
+            newGroup.name = groupName;
+
+            var gizmo = newGroup.GetComponent<GroupIntersectionGizmo>();
+            gizmo.line = line;
+            gizmo.shape = shape;
+
+            return newGroup.transform;
         }
 
         public Transform SpawnProjection(Transform point, Transform line)

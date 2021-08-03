@@ -122,11 +122,21 @@ public class Math2DWindow : EditorWindow
         if (GUILayout.Button(Resources.Load<Texture>("Icons/Intersect"), GUILayout.Width(buttonWidth),
             GUILayout.Height(buttonHeight)))
         {
-            var lines = getSelectedGameObjects(2);
-            if (lines != null)
+            var elements = getSelectedGameObjects(2);
+            if (elements != null)
             {
-                if (lines[0].IsLine() && lines[1].IsLine())
-                    points.SpawnIntersection(lines[0], lines[1]);
+                if (elements[0].IsLine() && elements[1].IsLine())
+                    points.SpawnIntersection(elements[0], elements[1]);
+
+                if (elements[0].IsLine() && elements[1].IsShape())
+                {
+                    points.SpawnGroupIntersection(elements[0], elements[1]);
+                }
+                
+                if (elements[0].IsShape() && elements[1].IsLine())
+                {
+                    points.SpawnGroupIntersection(elements[1], elements[0]);
+                }
             }
         }
         GUILayout.EndVertical();

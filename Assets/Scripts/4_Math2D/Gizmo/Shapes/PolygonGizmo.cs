@@ -6,12 +6,11 @@ using Math2D;
 using UnityEditor;
 using UnityEngine;
 
-public class PolygonGizmo : MonoBehaviour
+public class PolygonGizmo : MonoBehaviour, IShapeGizmo
 {
     [SerializeField]
     private Transform[] vertices;
-    private Polygon polygon;
-    
+
     public Color polygonColor = Color.yellow;
     public Color brokenPolygonColor = Color.red;
 
@@ -21,7 +20,6 @@ public class PolygonGizmo : MonoBehaviour
             return;
         
         this.vertices = vertices;
-        polygon = new Polygon(vertices.Select(v => new Point(v.position.x, v.position.y)).ToList());
         DrawSegmentBetweenPoints();
     }
 
@@ -50,6 +48,7 @@ public class PolygonGizmo : MonoBehaviour
             return;
         }
         
+        var polygon = GetPolygon();
         if (Selection.activeTransform == transform)
         {
             var text = "Area: " + polygon.Area();
@@ -59,7 +58,13 @@ public class PolygonGizmo : MonoBehaviour
 
     public Polygon GetPolygon()
     {
-        return polygon;
+        return new Polygon(vertices.Select(v => new Point(v.position.x, v.position.y)).ToArray());;
+    }
+
+    public Transform[] GetSegments()
+    {
+        var segments = SegmentManager.Instance;
+        return vertices.Zip(vertices.Skip(1), (a, b) => segments.GetSegment(a, b)).ToArray();
     }
 
     private void DrawSegmentBetweenPoints()
@@ -101,4 +106,9 @@ public class PolygonGizmo : MonoBehaviour
         
         DestroyImmediate(gameObject);
     }
+}
+
+public interface IShapeGizmo
+{
+    Transform[] GetSegments();
 }

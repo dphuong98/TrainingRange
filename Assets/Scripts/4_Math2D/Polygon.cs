@@ -8,20 +8,20 @@ namespace Math2D
 {
     public struct Polygon : IShape
     {
-        private readonly List<Point> vertices;
+        private readonly Point[] vertices;
 
-        public Polygon(List<Point> vertices)
+        public Polygon(Point[] vertices)
         {
-            if (vertices.Count < 3)
+            if (vertices.Length < 3)
                 throw new ArgumentException("A polygon must have at least 3 points");
-            this.vertices = new List<Point>(vertices);
+            this.vertices = vertices;
         }
 
         public bool Contains(Point p)
         {
             var isInside = false;
             int i, j;
-            for (i = 0, j = vertices.Count - 1; i < vertices.Count; j = i++)
+            for (i = 0, j = vertices.Length - 1; i < vertices.Length; j = i++)
             {
                 var pi = vertices[i];
                 var pj = vertices[j];
@@ -39,7 +39,7 @@ namespace Math2D
             
             // Initialize area
             var area = 0f;
-            var n = vertices.Count;
+            var n = vertices.Length;
             int i, j;
             
             // Calculate value of shoelace formula
@@ -51,19 +51,29 @@ namespace Math2D
             return Math.Abs(area / 2f);
         }
 
-        public bool Intersect(Line line, ref List<Point> intersections)
+        public bool Intersect(ILine line, ref List<Point> intersections)
         {
-            throw new System.NotImplementedException();
-        }
+            var segments = vertices.Zip(vertices.Skip(1), (a, b) => new LineSegment(a, b));
+            foreach (var segment in segments)
+            {
+                var intersection = new Point();
+                if (line.Intersect(segment, ref intersection))
+                {
+                    intersections.Add(intersection);
+                }
+            }
 
-        public bool Intersect(LineSegment line, ref List<Point> intersections)
-        {
-            throw new System.NotImplementedException();
+            return intersections.Count > 0;
         }
 
         public Rectangle AABB()
         {
-            throw new System.NotImplementedException();
+            var xMin = vertices.Min(v => v.x);
+            var xMax = vertices.Max(v => v.x);
+            var yMin = vertices.Min(v => v.y);
+            var yMax = vertices.Max(v => v.y);
+
+            return new Rectangle(new Point(xMax, yMax), xMax - xMin, yMax - yMin);
         }
     }
 }
