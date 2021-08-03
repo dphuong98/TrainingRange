@@ -7,9 +7,9 @@ namespace Math2D
 {
     public struct Rectangle : IShape
     {
-        private Point topRight;
-        private float width;
-        private float height;
+        public Point topRight;
+        public float width;
+        public float height;
 
         public Rectangle(Point topRight, float width, float height)
         {

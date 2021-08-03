@@ -11,6 +11,7 @@ public class PolygonGizmo : MonoBehaviour, IShapeGizmo
     [SerializeField]
     protected Transform[] vertices;
 
+    public Color boundingBoxColor = Color.cyan;
     public Color polygonColor = Color.yellow;
     public Color brokenPolygonColor = Color.red;
 
@@ -53,6 +54,8 @@ public class PolygonGizmo : MonoBehaviour, IShapeGizmo
         {
             var text = "Area: " + polygon.Area();
             Handles.Label(vertices[0].position + new Vector3(-0.5f, -0.5f), text, EditorStyles.boldLabel);
+
+            RenderBoundingBox();
         }
     }
 
@@ -67,6 +70,28 @@ public class PolygonGizmo : MonoBehaviour, IShapeGizmo
         var segmentList = vertices.Zip(vertices.Skip(1), (a, b) => segments.GetSegment(a, b)).ToList();
         segmentList.Add(segments.GetSegment(vertices.Last(), vertices.First()));
         return segmentList;
+    }
+
+    private void RenderBoundingBox()
+    {
+        var boundingBox = GetPolygon().AABB();
+        var topRight = new Vector3(boundingBox.topRight.x, boundingBox.topRight.y, 0);
+        var width = boundingBox.width;
+        var height = boundingBox.height;
+        var verticesPoint = new Vector3[]
+        {
+            topRight,
+            topRight + new Vector3(0, -height, 0),
+            topRight + new Vector3(-width, -height, 0),
+            topRight + new Vector3(-width, 0, 0),
+        };
+        
+        Gizmos.color = boundingBoxColor;
+        for (var i = 0; i < vertices.Length - 1; i++)
+        {
+            Gizmos.DrawLine(verticesPoint[i], verticesPoint[i+1]);
+        }
+        Gizmos.DrawLine(verticesPoint[vertices.Length - 1], verticesPoint[0]);
     }
 
     protected void DrawSegmentBetweenPoints()
