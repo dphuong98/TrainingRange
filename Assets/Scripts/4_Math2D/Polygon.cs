@@ -53,7 +53,8 @@ namespace Math2D
 
         public bool Intersect(ILine line, ref List<Point> intersections)
         {
-            var segments = vertices.Zip(vertices.Skip(1), (a, b) => new LineSegment(a, b));
+            var segments = vertices.Zip(vertices.Skip(1), (a, b) => new LineSegment(a, b)).ToList();
+            segments.Add(new LineSegment(vertices.Last(), vertices.First()));
             foreach (var segment in segments)
             {
                 var intersection = new Point();

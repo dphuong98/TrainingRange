@@ -43,7 +43,7 @@ namespace Math2D
             return intersections.Count > 0;
         }
 
-        public List<LineSegment> GetSegments()
+        private List<LineSegment> GetSegments()
         {
             var vertices = new Point[] { topRight, new Point(topRight.x, topRight.y - height),
                 new Point(topRight.x - width, topRight.y - height), new Point(topRight.x - width, topRight.y) };
