@@ -31,12 +31,12 @@ public static class String
         return string.Join(separator, str?.Where(s => !string.IsNullOrEmpty(s)) ?? Array.Empty<string>());
     }
 
-    private static Random random = new Random();
+    private static readonly Random random = new Random();
     public static string Random(int length)
     {
-        var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         var stringChars = new char[length];
-        for (int i = 0; i < stringChars.Length; i++)
+        for (var i = 0; i < stringChars.Length; i++)
         {
             stringChars[i] = chars[random.Next(chars.Length)];
         }
