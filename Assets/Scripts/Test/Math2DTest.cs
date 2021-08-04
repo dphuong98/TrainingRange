@@ -11,6 +11,7 @@ public class Math2DTest : MonoBehaviour
         //PointTest();
         //LineTest();
         //LineSegmentTest();
+        //ShapeTest();
     }
 
     void PointTest()
@@ -103,5 +104,14 @@ public class Math2DTest : MonoBehaviour
         var in6 = ln1.Intersect(new Line(0, 1, 2), ref pt6);
         var pt7 = new Point();
         var in7 = ln1.Intersect(new Line(-1, 1, 1), ref pt7);
+    }
+
+    void ShapeTest()
+    {
+        var circle = new Circle(new Point(1,1), 2);
+        var line = new Line(1, 1, 1);
+
+        var inters = new List<Point>();
+        var intersect = circle.Intersect(line, ref inters);
     }
 }

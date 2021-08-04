@@ -8,7 +8,7 @@ namespace Math2D
 {
     public struct Polygon : IShape
     {
-        private readonly Point[] vertices;
+        public Point[] vertices;
 
         public Polygon(Point[] vertices)
         {

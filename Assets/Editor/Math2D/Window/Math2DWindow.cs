@@ -181,6 +181,15 @@ public class Math2DWindow : EditorWindow
                 GUILayout.Height(buttonHeight)))
                     shapes.SpawnRectangle();
         }
+        
+        {
+            GUI.enabled = true;
+            var polygonContent =
+                new GUIContent(Resources.Load<Texture>("Icons/Circle"), "Create a circle");
+            if (GUILayout.Button(polygonContent, GUILayout.Width(buttonWidth),
+                GUILayout.Height(buttonHeight)))
+                    shapes.SpawnCircle();
+        }
 
         {
             var elements = getSelectedGameObjects(2);

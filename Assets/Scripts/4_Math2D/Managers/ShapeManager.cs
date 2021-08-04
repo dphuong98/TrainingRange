@@ -7,8 +7,9 @@ using UnityEngine;
 
 public class ShapeManager : Singleton<ShapeManager>
 {
-    [SerializeField] private GameObject rectanglePrefab;
     [SerializeField] private GameObject polygonPrefab;
+    [SerializeField] private GameObject rectanglePrefab;
+    [SerializeField] private GameObject circlePrefab;
 
     public Transform SpawnPolygon(Transform[] vertices)
     {
@@ -51,5 +52,32 @@ public class ShapeManager : Singleton<ShapeManager>
     public bool Exist(string name)
     {
         return transform.Find(name);
+    }
+
+    public Transform SpawnCircle()
+    {
+        var radius = 3f;
+        foreach (var c in "123456789")
+        {
+            var circleName = "C" + c;
+            if (Exist(circleName)) continue;
+
+            var newCircle = Instantiate(circlePrefab, transform);
+            newCircle.name = circleName;
+            
+            var cameraPosition = SceneView.lastActiveSceneView.camera.transform.position;
+            var circleCenter = new Point(cameraPosition.x, cameraPosition.y);
+
+            var points = PointManager.Instance;
+            var circleCenterTransform = points.SpawnPoint(circleName + "-O", circleCenter);
+            
+            var gizmo = newCircle.GetComponent<CircleGizmo>();
+            gizmo.center = circleCenterTransform;
+            gizmo.radius = radius;
+            
+            return newCircle.transform;
+        }
+
+        return null;
     }
 }

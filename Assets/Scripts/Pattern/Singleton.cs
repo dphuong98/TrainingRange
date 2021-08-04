@@ -7,15 +7,9 @@ using UnityEngine;
 /// </summary>
 public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
-    // Check to see if we're about to be destroyed.
-    private static bool m_ShuttingDown;
+    //Note: m_shuttingDown is removed so this script can run in editor mode
     private static object m_Lock = new object();
     private static T m_Instance;
-
-    private void Awake()
-    {
-        m_ShuttingDown = false;
-    }
 
     /// <summary>
     /// Access singleton instance through this propriety.
@@ -24,13 +18,6 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         get
         {
-            if (m_ShuttingDown)
-            {
-                Debug.LogWarning("[Singleton] Instance '" + typeof(T) +
-                    "' already destroyed. Returning null.");
-                return null;
-            }
- 
             lock (m_Lock)
             {
                 if (m_Instance == null)
@@ -54,17 +41,5 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
                 return m_Instance;
             }
         }
-    }
- 
- 
-    private void OnApplicationQuit()
-    {
-        m_ShuttingDown = true;
-    }
- 
- 
-    private void OnDestroy()
-    {
-        m_ShuttingDown = true;
     }
 }

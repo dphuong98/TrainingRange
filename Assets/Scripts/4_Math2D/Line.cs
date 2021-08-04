@@ -7,6 +7,7 @@ namespace Math2D
 {
     public struct Line : ILine
     {
+        //ax + by = c
         private float _a;
         private float _b;
         private float _c;

@@ -2,140 +2,146 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Math2D;
 using UnityEditor;
 using UnityEngine;
 
-public class PolygonGizmo : MonoBehaviour, IShapeGizmo
+namespace Math2D
 {
-    [SerializeField]
-    protected Transform[] vertices;
-
-    public Color boundingBoxColor = Color.cyan;
-    public Color polygonColor = Color.yellow;
-    public Color brokenPolygonColor = Color.red;
-
-    public void SetVertices(Transform[] vertices)
+    public class PolygonGizmo : MonoBehaviour, IPolygonGizmo, IShapeGizmo
     {
-        if (vertices.Length < 3)
-            return;
-        
-        this.vertices = vertices;
-        DrawSegmentBetweenPoints();
-    }
+        [SerializeField]
+        protected Transform[] vertices;
 
-    private void OnDrawGizmos()
-    {
-        if (vertices.Count(v => v == null) > 0)
+        public Color boundingBoxColor = Color.cyan;
+        public Color polygonColor = Color.yellow;
+        public Color brokenPolygonColor = Color.red;
+
+        public void SetVertices(Transform[] vertices)
         {
-            DestroyProtocol();
-            return;
+            if (vertices.Length < 3)
+                return;
+        
+            this.vertices = vertices;
+            DrawSegmentBetweenPoints();
         }
-        
-        var segments = SegmentManager.Instance;
-        
-        for (var i = 0; i < vertices.Length - 1; i++)
+
+        private void OnDrawGizmos()
         {
-            if (!segments.Exist(vertices[i], vertices[i+1]))
+            if (vertices.Count(v => v == null) > 0)
             {
                 DestroyProtocol();
                 return;
             }
+        
+            var segments = SegmentManager.Instance;
+        
+            for (var i = 0; i < vertices.Length - 1; i++)
+            {
+                if (!segments.Exist(vertices[i], vertices[i+1]))
+                {
+                    DestroyProtocol();
+                    return;
+                }
+            }
+
+            if (!segments.Exist(vertices[vertices.Length - 1], vertices[0]))
+            {
+                DestroyProtocol();
+                return;
+            }
+
+            if (Selection.activeTransform == transform)
+            {
+                RenderArea();
+                RenderBoundingBox();
+            }
         }
 
-        if (!segments.Exist(vertices[vertices.Length - 1], vertices[0]))
+        private void RenderArea()
         {
-            DestroyProtocol();
-            return;
-        }
-        
-        var polygon = GetPolygon();
-        if (Selection.activeTransform == transform)
-        {
+            var polygon = GetPolygon();
             var text = "Area: " + polygon.Area();
             Handles.Label(vertices[0].position + new Vector3(-0.5f, -0.5f), text, EditorStyles.boldLabel);
-
-            RenderBoundingBox();
         }
-    }
 
-    public Polygon GetPolygon()
-    {
-        return new Polygon(vertices.Select(v => new Point(v.position.x, v.position.y)).ToArray());;
-    }
-
-    public List<Transform> GetSegments()
-    {
-        var segments = SegmentManager.Instance;
-        var segmentList = vertices.Zip(vertices.Skip(1), (a, b) => segments.GetSegment(a, b)).ToList();
-        segmentList.Add(segments.GetSegment(vertices.Last(), vertices.First()));
-        return segmentList;
-    }
-
-    private void RenderBoundingBox()
-    {
-        var boundingBox = GetPolygon().AABB();
-        var topRight = new Vector3(boundingBox.topRight.x, boundingBox.topRight.y, 0);
-        var width = boundingBox.width;
-        var height = boundingBox.height;
-        var verticesPoint = new Vector3[]
+        public Polygon GetPolygon()
         {
-            topRight,
-            topRight + new Vector3(0, -height, 0),
-            topRight + new Vector3(-width, -height, 0),
-            topRight + new Vector3(-width, 0, 0),
-        };
-        
-        Gizmos.color = boundingBoxColor;
-        for (var i = 0; i < vertices.Length - 1; i++)
-        {
-            Gizmos.DrawLine(verticesPoint[i], verticesPoint[i+1]);
+            return new Polygon(vertices.Select(v => new Point(v.position.x, v.position.y)).ToArray());;
         }
-        Gizmos.DrawLine(verticesPoint[vertices.Length - 1], verticesPoint[0]);
-    }
 
-    protected void DrawSegmentBetweenPoints()
-    {
-        var segments = SegmentManager.Instance;
-        
-        for (var i = 0; i < vertices.Length - 1; i++)
+        public List<Transform> GetSegments()
         {
-            if (!segments.Exist(vertices[i], vertices[i + 1]))
+            var segments = SegmentManager.Instance;
+            var segmentList = vertices.Zip(vertices.Skip(1), (a, b) => segments.GetSegment(a, b)).ToList();
+            segmentList.Add(segments.GetSegment(vertices.Last(), vertices.First()));
+            return segmentList;
+        }
+
+        private void RenderBoundingBox()
+        {
+            var boundingBox = GetPolygon().AABB();
+            var topRight = new Vector3(boundingBox.topRight.x, boundingBox.topRight.y, 0);
+            var width = boundingBox.width;
+            var height = boundingBox.height;
+            var verticesPoint = new Vector3[]
             {
-                segments.SpawnSegment(vertices[i], vertices[i + 1]);
-            }
-            segments.GetSegment(vertices[i], vertices[i + 1]).GetComponent<SegmentGizmo>().segmentColor = polygonColor;
-        }
-
-        if (!segments.Exist(vertices[vertices.Length - 1], vertices[0]))
-        {
-            segments.SpawnSegment(vertices[vertices.Length - 1], vertices[0]);
-        }
-        segments.GetSegment(vertices[vertices.Length - 1], vertices[0]).GetComponent<SegmentGizmo>().segmentColor = polygonColor;
-    }
-
-    private void DestroyProtocol()
-    {
-        var segments = SegmentManager.Instance;
+                topRight,
+                topRight + new Vector3(0, -height, 0),
+                topRight + new Vector3(-width, -height, 0),
+                topRight + new Vector3(-width, 0, 0),
+            };
         
-        for (var i = 0; i < vertices.Length - 1; i++)
-        {
-            if (vertices[i] != null && vertices[i + 1] != null && segments.Exist(vertices[i], vertices[i+1]))
+            Gizmos.color = boundingBoxColor;
+            for (var i = 0; i < verticesPoint.Length - 1; i++)
             {
-                segments.GetSegment(vertices[i], vertices[i + 1]).GetComponent<SegmentGizmo>().segmentColor = brokenPolygonColor;
+                Gizmos.DrawLine(verticesPoint[i], verticesPoint[i+1]);
             }
+            Gizmos.DrawLine(verticesPoint[verticesPoint.Length - 1], verticesPoint[0]);
         }
 
-        if (vertices[vertices.Length - 1] != null && vertices[0] != null && segments.Exist(vertices[vertices.Length - 1], vertices[0]))
+        protected void DrawSegmentBetweenPoints()
         {
-            segments.GetSegment(vertices[vertices.Length - 1], vertices[0]).GetComponent<SegmentGizmo>().segmentColor = brokenPolygonColor;
-        }
+            var segments = SegmentManager.Instance;
         
-        DestroyImmediate(gameObject);
+            for (var i = 0; i < vertices.Length - 1; i++)
+            {
+                if (!segments.Exist(vertices[i], vertices[i + 1]))
+                {
+                    segments.SpawnSegment(vertices[i], vertices[i + 1]);
+                }
+                segments.GetSegment(vertices[i], vertices[i + 1]).GetComponent<SegmentGizmo>().segmentColor = polygonColor;
+            }
+
+            if (!segments.Exist(vertices[vertices.Length - 1], vertices[0]))
+            {
+                segments.SpawnSegment(vertices[vertices.Length - 1], vertices[0]);
+            }
+            segments.GetSegment(vertices[vertices.Length - 1], vertices[0]).GetComponent<SegmentGizmo>().segmentColor = polygonColor;
+        }
+
+        private void DestroyProtocol()
+        {
+            var segments = SegmentManager.Instance;
+        
+            for (var i = 0; i < vertices.Length - 1; i++)
+            {
+                if (vertices[i] != null && vertices[i + 1] != null && segments.Exist(vertices[i], vertices[i+1]))
+                {
+                    segments.GetSegment(vertices[i], vertices[i + 1]).GetComponent<SegmentGizmo>().segmentColor = brokenPolygonColor;
+                }
+            }
+
+            if (vertices[vertices.Length - 1] != null && vertices[0] != null && segments.Exist(vertices[vertices.Length - 1], vertices[0]))
+            {
+                segments.GetSegment(vertices[vertices.Length - 1], vertices[0]).GetComponent<SegmentGizmo>().segmentColor = brokenPolygonColor;
+            }
+        
+            DestroyImmediate(gameObject);
+        }
     }
 }
 
-public interface IShapeGizmo
+public interface IPolygonGizmo
 {
     List<Transform> GetSegments();
 }

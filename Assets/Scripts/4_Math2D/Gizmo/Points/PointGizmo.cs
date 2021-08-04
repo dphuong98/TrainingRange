@@ -20,7 +20,7 @@ namespace Math2D
                 text += HideName ? gameObject.name: "";
                 text += HideCoord ? GetCoord() : "";
             }
-
+            
             Handles.Label(transform.position + new Vector3(-0.25f, 0.5f), text, EditorStyles.boldLabel);
         }
 

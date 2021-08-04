@@ -37,6 +37,12 @@ namespace Math2D
             {
                 return rectangle.GetRectangle();
             }
+            
+            var circle = transform.GetComponent<CircleGizmo>();
+            if (circle != null)
+            {
+                return circle.GetCircle();
+            }
 
             return null;
         }
@@ -54,6 +60,12 @@ namespace Math2D
             {
                 return rectangle;
             }
+            
+            var circle = transform.GetComponent<CircleGizmo>();
+            if (circle != null)
+            {
+                return circle;
+            }
 
             return null;
         }
@@ -70,7 +82,7 @@ namespace Math2D
 
         public static bool IsShape(this Transform transform)
         {
-            return transform.GetComponent<PolygonGizmo>() != null || transform.GetComponent<RectangleGizmo>() != null;
+            return transform.GetComponent<PolygonGizmo>() != null || transform.GetComponent<RectangleGizmo>() != null || transform.GetComponent<CircleGizmo>();
         }
     }
 }
