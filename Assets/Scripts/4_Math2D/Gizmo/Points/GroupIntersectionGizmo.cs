@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Math2D
 {
-    public class GroupIntersectionGizmo : ConditionalPointGizmo
+    public class GroupIntersectionGizmo : MonoBehaviour
     {
         public Transform line;
         public Transform shape;
@@ -16,13 +16,14 @@ namespace Math2D
         [SerializeField]
         private Transform circleIntersection2;
 
-        protected override bool IsValid()
-        {
-            return line != null && shape != null;
-        }
-
         private void OnDrawGizmos()
         {
+            if (line == null || shape == null)
+            {
+                DestroyImmediate(gameObject);
+                return;
+            }
+            
             var points = PointManager.Instance;
 
             var shapeGizmo = shape.GetShapeGizmo();
